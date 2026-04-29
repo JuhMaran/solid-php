@@ -1,2 +1,1 @@
-# solid-php
-SOLID with PHP
+# SOLID with PHP
