@@ -77,6 +77,8 @@ Mapeamento:
 }
 ```
 
+![Projeto Carrinho de Compras - Configurando o Autoloader](./../images/001_autoloader.png)
+
 #### O que isso significa?
 
 * Tudo dentro de `/src`
@@ -174,6 +176,8 @@ A classe `CarrinhoCompra` parece simples, mas:
 
 #### 🚨 Ela tem múltiplas responsabilidades
 
+![Projeto Carrinho de Compras - Single Responsibility Principle](./../images/002_srp.png)
+
 #### 1. Carrinho
 
 * Controla estado (status, total)
@@ -252,3 +256,16 @@ Pedido
 EmailService
 ```
 
+---
+
+## Resumo Final
+
+* Aula 04: Criação do Projeto
+* Aula 05: Autoload (infraestrutura)
+* Aula 06: Modelagem OO (abstração)
+* Aula 07: Introdução ao SRP
+
+## Mensagem Principal
+
+> **Código funcional não é sinônimo de código bem projetado**.
+> O SRP existe para garantir **manutenção, clareza e escalabilidade**.
