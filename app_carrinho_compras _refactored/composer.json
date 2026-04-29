@@ -1,0 +1,16 @@
+{
+    "name": "julia/app_carrinho_compras",
+    "type": "project",
+    "autoload": {
+        "psr-4": {
+            "AppCarrinhoCompras\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "JuhMaran",
+            "email": "julianemaran@gmail.com"
+        }
+    ],
+    "require": {}
+}
