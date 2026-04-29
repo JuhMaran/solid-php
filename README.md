@@ -1,4 +1,4 @@
-# SOLID 
+# SOLID
 
 _Os 5 princípios para as boas práticas da POO com PHP_
 

@@ -62,3 +62,28 @@ Include the Composer autoloader with: require 'vendor/autoload.php';
 ## Projeto Carrinho de Compras - Configurando o Autoloader
 
 ![Projeto Carrinho de Compras - Configurando o Autoloader](./../images/001_autoloader.png)
+
+## Entendendo o Single Responsibility Principle (SRP)
+
+Uma classe deve ter apenas um motivo para mudar, ou em outras palavras, uma classe deve ter uma e apenas uma responsabilidade.
+
+### Métodos - CarrinhoCompra.php
+
+- `exibirItens()`
+- `adicionarItem()`
+- `exibirValorTotal()`
+- `exibirStatus()`
+- `confirmarPedido()`
+- `enviarEmailConfirmacao()`
+- `validarCarrinho()`
+
+### Responsabilidade da Classe
+
+Responsabilidade sobre:
+
+- o carrinho de compras
+- os itens
+- o pedido
+- o envio de e-mails
+
+![Entendendo o Single Responsibility Principle](./../images/002_srp.png)
