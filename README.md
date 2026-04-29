@@ -9,3 +9,9 @@ _Os 5 princípios para as boas práticas da POO com PHP_
 3. LSP - Liskov Substitution Principle (Princípio de Substituição de Liskov)
 4. ISP - Interface Segregation Principle (Princípio da Segregação de Interface)
 5. DIP - Dependency Inversion Principle (Princípio da Inversão de Dependência)
+
+## Executando a aplicação
+
+```
+php -S localhost:8000
+```

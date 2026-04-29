@@ -3,7 +3,7 @@
     "type": "project",
     "autoload": {
         "psr-4": {
-            "Julia\\AppCarrinhoCompras\\": "src/"
+            "AppCarrinhoCompras\\": "src/"
         }
     },
     "authors": [
