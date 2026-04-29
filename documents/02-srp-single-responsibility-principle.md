@@ -1,89 +1,254 @@
-# SRP - Single Responsibility Principle
+# SRP - Single Responsibility Principle (Princípio da Responsabilidade Única)
 
-_Princípio da Responsabilidade Única_
+Nessas aulas, o curso segue uma abordagem **progressiva**:
 
-## Iniciando o Projeto Carrinho de Compras
+1. Primeiro, constrói um sistema simples **sem aplicar SOLID**
+2. Depois, analisa esse sistema
+3. Por fim, introduz o **SRP (Single Responsibility Principle)** mostrando os problemas reais
 
-### Verificar se o PHP está instalado
+## 1. Iniciando o Projeto
 
-```powershell
-php -v
+### Objetivo
+
+Criar a base do projeto **Carrinho de Compras**, focando apenas em **orientação a objetos**, sem se preocupar ainda com boas práticas.
+
+### Conceitos Principais
+
+#### 1. Separação entre teoria e prática
+
+* Primeiro: construir “do jeito simples”
+* Depois: aplicar os princípios SOLID
+* Isso permite **comparar antes vs depois**
+
+#### 2. Independência de linguagem
+
+* O exemplo usa PHP
+* Mas os conceitos de SOLID são **agnósticos de tecnologia**
+
+#### 3. Uso do Composer
+
+* Gerenciador de dependências do PHP
+* Responsável por:
+  * organizar o projeto
+  * configurar autoload
+  * evitar `require` manual em vários arquivos
+
+#### 4. Estrutura inicial
+
+* Criação do projeto via `composer init`
+* Geração do arquivo `composer.json`
+* Base para organização futura
+
+## 2. Configurando o Autoloader
+
+### Objetivo
+
+Automatizar o carregamento de classes
+
+### Conceito Central: Autoload
+
+#### Sem autoload
+
+Você precisa fazer:
+
+```php
+require 'CarrinhoCompra.php';
 ```
 
-### Instalação e Configuração do Composer via Linha de Comando
+#### Com autoload
 
-```powershell
-PS PS C:\...\solid-php\app_carrinho_compras> php ../composer.phar init
+Você apenas usa a classe:
 
-Package name (<vendor>/<name>) [julia/app_carrinho_compras]:
-Description []:
-Author [JuhMaran <julianemaran@gmail.com>, n to skip]:
-Minimum Stability []:
-Package Type (e.g. library, project, metapackage, composer-plugin) []: project
-License []:
+```php
+$carrinho = new CarrinhoCompra();
+```
 
-Define your dependencies.
+O sistema carrega automaticamente.
 
-Would you like to define your dependencies (require) interactively [yes]?
+### PSR-4 (Padrão de Autoload)
 
-Package Type (e.g. library, project, metapackage, composer-plugin) []: project
-License []:
+Mapeamento:
 
-Define your dependencies.
-
-Would you like to define your dependencies (require) interactively [yes]? no
-Would you like to define your dev dependencies (require-dev) interactively [yes]? no     
-Add PSR-4 autoload mapping? Maps namespace "Julia\AppCarrinhoCompras" to the entered relative path. [src/, n to skip]:
-
-{
-    "name": "julia/app_carrinho_compras",
-    "type": "project",
-    "autoload": {
-        "psr-4": {
-            "Julia\\AppCarrinhoCompras\\": "src/"
-        }
-    },
-    "authors": [
-        {
-            "name": "JuhMaran",
-            "email": "julianemaran@gmail.com"
-        }
-    ],
-    "require": {}
+```json
+"autoload": {
+  "psr-4": {
+    "AppCarrinhoCompras\\": "src/"
+  }
 }
-
-Do you confirm generation [yes]? yes
-Generating autoload files
-Generated autoload files
-PSR-4 autoloading configured. Use "namespace Julia\AppCarrinhoCompras;" in src/
-Include the Composer autoloader with: require 'vendor/autoload.php';
 ```
 
-## Projeto Carrinho de Compras - Configurando o Autoloader
+#### O que isso significa?
 
-![Projeto Carrinho de Compras - Configurando o Autoloader](./../images/001_autoloader.png)
+* Tudo dentro de `/src`
+* Pertence ao namespace `AppCarrinhoCompras`
+* O Composer resolve automaticamente
 
-## Entendendo o Single Responsibility Principle (SRP)
+### Fluxo Correto
 
-Uma classe deve ter apenas um motivo para mudar, ou em outras palavras, uma classe deve ter uma e apenas uma responsabilidade.
+1. Configurar: `compose.json`
+2. Executar: `composer install` ou `composer dumpautoload`
+3. No projeto:
+   ```php
+   require 'vendor/autoload.php';
+   ```
 
-### Métodos - CarrinhoCompra.php
+### Insight importante
 
-- `exibirItens()`
-- `adicionarItem()`
-- `exibirValorTotal()`
-- `exibirStatus()`
-- `confirmarPedido()`
-- `enviarEmailConfirmacao()`
-- `validarCarrinho()`
+O autoload:
 
-### Responsabilidade da Classe
+* **não é SOLID**
+* é apenas **infraestrutura**
+* prepara o terreno para escrever código php melhor
 
-Responsabilidade sobre:
+## 3. Abstração da Classe Carrinho
 
-- o carrinho de compras
-- os itens
-- o pedido
-- o envio de e-mails
+### Objetivo
 
-![Entendendo o Single Responsibility Principle](./../images/002_srp.png)
+Modelar o domínio usando **orientação a objetos**.
+
+### Abstração
+
+Transformar o mundo real em código.
+
+#### Exemplo
+
+Um carrinho tem:
+
+* **Atributos**
+  * `itens`
+  * `status`
+  * `valorTotal`
+* **Métodos**
+  * `exibirItens()`
+  * `adicionarItem()`
+  * `exibirValorTotal()`
+  * `exibirStatus()`
+  * `confirmarPedido()`
+  * `enviarEmailConfirmacao()`
+  * `validarCarrinho()`
+
+### Lógica Implementada
+
+#### 1. Adicionar Item
+
+* Guarda item + valor
+* Atualiza valor total
+
+#### 2. Confirmar Pedido
+
+* Valida se há itens
+* Altera status
+* Envia e-mail
+
+#### 3. Validação
+
+```php
+return count($this->itens) > 0;
+```
+
+### Conceito-Chave
+
+#### O código está correto?
+
+Sim.
+
+#### Está bem projetado?
+
+Ainda não.
+
+Esse é o ponto didático da aula.
+
+## 4. Entendendo o SRP
+
+### Definição do SRP
+
+> Uma classe deve ter **apenas um motivo para mudar**.
+
+ou
+
+> Uma classe deve ter **uma única responsabilidade**.
+
+### Análise da Classe Criada
+
+A classe `CarrinhoCompra` parece simples, mas:
+
+#### 🚨 Ela tem múltiplas responsabilidades
+
+#### 1. Carrinho
+
+* Controla estado (status, total)
+
+#### 2. Itens
+
+* Adiciona e gerencia itens
+
+#### 3. Pedido
+
+* Confirma pedido
+
+#### 4. Comunicação
+
+* Envia e-mail
+
+### Problema Central
+
+#### Muitos motivos para mudar
+
+| Mudança            | Afeta a classe? |
+| ------------------ | --------------- |
+| Regra de cálculo   | Sim             |
+| Estrutura de itens | Sim             |
+| Processo de pedido | Sim             |
+| Envio de e-mail    | Sim             |
+
+### Consequências
+
+#### 1. Alto acoplamento
+
+Tudo está ligado em um único lugar
+
+#### 2. Baixa reutilização
+
+* Quer usar envio de e-mail em outro lugar?
+* Teria que usar o carrinho inteiro ❌
+
+#### 3. Dificuldade de testes
+
+* Testar e-mail exige instanciar carrinho
+* Testar carrinho dispara e-mail
+
+#### 4. Risco de efeitos colaterais
+
+* Um erro em pedido → quebra e-mail, itens, etc.
+
+### Insight essencial
+
+Mesmo que:
+
+* o código funcione
+* seja simples
+
+Ele pode estar mal projetado.
+
+### Ideia central do SRP
+
+Separar responsabilidades:
+
+Em vez de:
+
+```text
+CarrinhoCompra
+ ├── itens
+ ├── pedido
+ ├── email
+```
+
+Ter algo como:
+
+```text
+CarrinhoCompra
+Item
+Pedido
+EmailService
+```
+
