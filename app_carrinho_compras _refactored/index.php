@@ -6,6 +6,7 @@ use AppCarrinhoCompras\CarrinhoCompra;
 
 // echo CarrinhoCompra::teste();
 
+echo '<h3>Com SRP</h3>';
 $carrinho1 = new CarrinhoCompra();
 
 print_r($carrinho1->exibirItens());

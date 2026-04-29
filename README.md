@@ -12,6 +12,18 @@ _Os 5 princípios para as boas práticas da POO com PHP_
 
 ## Executando a aplicação
 
-```
+### APP Carrinho Compras
+
+* Sem SRP
+
+```powershell
 php -S localhost:8000
+```
+
+### APP Carrinho Compras Refactored
+
+* Com SRP
+
+```powershell
+php -S localhost:8001
 ```
