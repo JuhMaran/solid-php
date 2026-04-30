@@ -26,12 +26,12 @@ class Item
         return $this->valor;
     }
 
-    public function setDescricao($descricao)
+    public function setDescricao(string $descricao)
     {
         $this->descricao = $descricao;
     }
 
-    public function setValor($valor)
+    public function setValor(float $valor)
     {
         $this->valor = $valor;
     }
