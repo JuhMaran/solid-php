@@ -269,3 +269,11 @@ EmailService
 
 > **Código funcional não é sinônimo de código bem projetado**.
 > O SRP existe para garantir **manutenção, clareza e escalabilidade**.
+
+### Testando as vantagens do SRP
+
+Incluir as seguintes validações para os itens:
+
+Não permitir itens com valores zerados ou negativos. Se o valor do item for zerado ou negativo o sistema deve retornar `false`, cao contrário `true`.
+
+Não permitir itens com descrições vazias. Se a descrição do item estiver vazio o sistema deve retornar `false`, caso contrário `true`.

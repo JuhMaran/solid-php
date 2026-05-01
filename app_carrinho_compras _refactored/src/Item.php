@@ -8,14 +8,12 @@ class Item
     private $descricao;
     private $valor;
 
-    // Construtor
     public function __construct()
     {
         $this->descricao = '';
         $this->valor = 0;
     }
 
-    // Getters e Setters
     public function getDescricao()
     {
         return $this->descricao;
@@ -34,5 +32,16 @@ class Item
     public function setValor(float $valor)
     {
         $this->valor = $valor;
+    }
+
+    public function itemValido()
+    {
+        if ($this->descricao == '') {
+            return false;
+        }
+        if ($this->valor <= 0) {
+            return false;
+        }
+        return true;
     }
 }
