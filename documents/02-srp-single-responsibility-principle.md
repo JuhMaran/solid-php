@@ -1,279 +1,276 @@
 # SRP - Single Responsibility Principle (Princípio da Responsabilidade Única)
 
-Nessas aulas, o curso segue uma abordagem **progressiva**:
+## Objetivo da Seção
 
-1. Primeiro, constrói um sistema simples **sem aplicar SOLID**
-2. Depois, analisa esse sistema
-3. Por fim, introduz o **SRP (Single Responsibility Principle)** mostrando os problemas reais
+Ensinar, na prática, o **Princípio da Responsabilidade Única (SRP)**:
 
-## 1. Iniciando o Projeto
+> Uma classe deve ter apenas um motivo para mudar.
 
-### Objetivo
+A estratégia da seção é didática:
 
-Criar a base do projeto **Carrinho de Compras**, focando apenas em **orientação a objetos**, sem se preocupar ainda com boas práticas.
+1. Criar um sistema **sem aplicar SRP**
+2. Identificar problemas
+3. Refatorar aplicando o princípio
+4. Comparar os resultados
 
-### Conceitos Principais
+## Aula 4 - Iniciando o Projeto
 
-#### 1. Separação entre teoria e prática
+### 4.1 Ideia Principal
 
-* Primeiro: construir “do jeito simples”
-* Depois: aplicar os princípios SOLID
-* Isso permite **comparar antes vs depois**
+Criar a base do projeto de carrinho de compras **sem se preocupar com boas práticas ainda**.
 
-#### 2. Independência de linguagem
+### 4.2 Pontos Importantes
 
-* O exemplo usa PHP
-* Mas os conceitos de SOLID são **agnósticos de tecnologia**
+* Projeto em PHP com **Composer**
+* Estrutura inicial simples
+* Foco: preparar ambiente
 
-#### 3. Uso do Composer
+### 4.3 Conceito
 
-* Gerenciador de dependências do PHP
-* Responsável por:
-  * organizar o projeto
-  * configurar autoload
-  * evitar `require` manual em vários arquivos
+> Antes de melhorar um código, você precisa ter um código funcional.
 
-#### 4. Estrutura inicial
+## Aula 5 - Configurando o Autoload
 
-* Criação do projeto via `composer init`
-* Geração do arquivo `composer.json`
-* Base para organização futura
+### 5.1 Objetivo
 
-## 2. Configurando o Autoloader
+### 5.2 Solução
 
-### Objetivo
+### 5.3 Conceito Importante
 
-Automatizar o carregamento de classes
+### 5.4 Benefício
 
-### Conceito Central: Autoload
+## Aula 6 - Abstraindo o Carrinho de Compras
 
-#### Sem autoload
+### 6.1 Objetivo
 
-Você precisa fazer:
+Criar a classe `CarrinhoCompra` usando orientação a objetos.
 
-```php
-require 'CarrinhoCompra.php';
-```
+### 6.2 Estrutura Criada
 
-#### Com autoload
+#### Atributos
 
-Você apenas usa a classe:
+* `itens`
+* `status`
+* `valorTotal`
 
-```php
-$carrinho = new CarrinhoCompra();
-```
+#### Métodos
 
-O sistema carrega automaticamente.
+* `adicionarItem()`
+* `exibirItens()`
+* `exibirValorTotal()`
+* `exibirStatus()`
+* `confirmarPedido()`
+* `enviarEmailConfirmacao()`
+* `validarCarrinho()`
 
-### PSR-4 (Padrão de Autoload)
+### 6.3 Conceito-Chave: Abstração
 
-Mapeamento:
+Você modela o sistema baseado no mundo real:
 
-```json
-"autoload": {
-  "psr-4": {
-    "AppCarrinhoCompras\\": "src/"
-  }
-}
-```
+* Carrinho tem itens
+* Carrinho tem valor
+* Carrinho pode ser confirmado
 
-![Projeto Carrinho de Compras - Configurando o Autoloader](./../images/001_autoloader.png)
+Até aqui, o código fnciona corretamente.
 
-#### O que isso significa?
+### 6.4 Problema (ainda oculto)
 
-* Tudo dentro de `/src`
-* Pertence ao namespace `AppCarrinhoCompras`
-* O Composer resolve automaticamente
+A classe começa a assumir **muitas responsabilidades**.
 
-### Fluxo Correto
+## Aula 7 - Entendendo o SRP
 
-1. Configurar: `compose.json`
-2. Executar: `composer install` ou `composer dumpautoload`
-3. No projeto:
-   ```php
-   require 'vendor/autoload.php';
-   ```
+### 7.1 Conceito Central
 
-### Insight importante
+> Uma classe deve ter apenas **uma responsabilidade**.
 
-O autoload:
+### 7.2 Problema identificado
 
-* **não é SOLID**
-* é apenas **infraestrutura**
-* prepara o terreno para escrever código php melhor
+A classe `CarrinhoCompra` faz:
 
-## 3. Abstração da Classe Carrinho
+* Gerenciamento de itens
+* Cálculo de valores
+* Controle de status do pedido
+* Envio de e-mail
 
-### Objetivo
+### 7.3 Consequência
 
-Modelar o domínio usando **orientação a objetos**.
+Ela tem **vários motivos para mudar**:
 
-### Abstração
+* Mudança na regra de itens
+* Mudança no envio de e-mail
+* Mudança no fluxo do pedido
 
-Transformar o mundo real em código.
+### 7.4 Problema técnico
 
-#### Exemplo
+Isso gera:
 
-Um carrinho tem:
+* Alto acoplamento
+* Baixa coesão
+* Dificuldade de manutenção
+* Código frágil
 
-* **Atributos**
-  * `itens`
-  * `status`
-  * `valorTotal`
-* **Métodos**
-  * `exibirItens()`
-  * `adicionarItem()`
-  * `exibirValorTotal()`
-  * `exibirStatus()`
-  * `confirmarPedido()`
-  * `enviarEmailConfirmacao()`
-  * `validarCarrinho()`
+### 7.5 Insight importante
 
-### Lógica Implementada
+> Quanto mais responsabilidades uma classe tem, mais difícil é mantê-la.
 
-#### 1. Adicionar Item
+## Aula 8 - Início do Refactoring
 
-* Guarda item + valor
-* Atualiza valor total
+### 8.1 Objetivo
 
-#### 2. Confirmar Pedido
+Começar a aplicar o SRP.
 
-* Valida se há itens
-* Altera status
-* Envia e-mail
+### 8.2 Ação
 
-#### 3. Validação
+Separar responsabilidades criando novas classes:
 
-```php
-return count($this->itens) > 0;
-```
+* `Item`
+* `Pedido`
+* `EmailService`
 
-### Conceito-Chave
+### 8.3 Conceito importante
 
-#### O código está correto?
+> Aplicar SRP geralmente **aumenta o número de classes**, mas melhora a organização.
 
-Sim.
+## Aula 9 - Separação de Responsabilidades
 
-#### Está bem projetado?
+### 9.1 Objetivo
 
-Ainda não.
+Distribuir corretamente as responsabilidades.
 
-Esse é o ponto didático da aula.
+### 9.2 Resultado Final
 
-## 4. Entendendo o SRP
+#### CarrinhoCompra
 
-### Definição do SRP
+* Gerenciar itens
 
-> Uma classe deve ter **apenas um motivo para mudar**.
+#### Item
 
-ou
+* Representa um item (descrição + valor)
 
-> Uma classe deve ter **uma única responsabilidade**.
+#### Pedido
 
-### Análise da Classe Criada
-
-A classe `CarrinhoCompra` parece simples, mas:
-
-#### 🚨 Ela tem múltiplas responsabilidades
-
-![Projeto Carrinho de Compras - Single Responsibility Principle](./../images/002_srp.png)
-
-#### 1. Carrinho
-
-* Controla estado (status, total)
-
-#### 2. Itens
-
-* Adiciona e gerencia itens
-
-#### 3. Pedido
-
+* Controla status
 * Confirma pedido
 
-#### 4. Comunicação
+#### EmailService
 
-* Envia e-mail
+* Envia e-mails
 
-### Problema Central
+### 9.3 Conceitos fundamentais
 
-#### Muitos motivos para mudar
+#### Coesão
 
-| Mudança            | Afeta a classe? |
-| ------------------ | --------------- |
-| Regra de cálculo   | Sim             |
-| Estrutura de itens | Sim             |
-| Processo de pedido | Sim             |
-| Envio de e-mail    | Sim             |
+Cada classe faz **uma única coisa bem feita**.
 
-### Consequências
+#### Baixo Acoplamento
 
-#### 1. Alto acoplamento
+Classes dependem pouco umas das outras.
 
-Tudo está ligado em um único lugar
+## Aula 10 - Integração das Classes
 
-#### 2. Baixa reutilização
+### 10.1 Objetivo
 
-* Quer usar envio de e-mail em outro lugar?
-* Teria que usar o carrinho inteiro ❌
+Fazer as classes trabalharem juntas.
 
-#### 3. Dificuldade de testes
+### 10.2 Fluxo do Sistema
 
-* Testar e-mail exige instanciar carrinho
-* Testar carrinho dispara e-mail
+1. Criar pedido
+2. Criar itens
+3. Adicionar itens ao carrinho
+4. Validar carrinho
+5. Confirmar pedido
+6. Enviar e-mail
 
-#### 4. Risco de efeitos colaterais
+### 10.3 Conceitos aplicados
 
-* Um erro em pedido → quebra e-mail, itens, etc.
-
-### Insight essencial
-
-Mesmo que:
-
-* o código funcione
-* seja simples
-
-Ele pode estar mal projetado.
-
-### Ideia central do SRP
-
-Separar responsabilidades:
-
-Em vez de:
+#### 1. Composição
 
 ```text
-CarrinhoCompra
- ├── itens
- ├── pedido
- ├── email
+Pedido → Carrinho → Itens
 ```
 
-Ter algo como:
+#### 2. Delegação
 
-```text
-CarrinhoCompra
-Item
-Pedido
-EmailService
-```
+* `Pedido` delega validação ao `Carrinho`
+* `Carrinho` não valida item
+* `Item` cuida de si mesmo
 
----
+#### 3. Encapsulamento
 
-## Resumo Final
+Cada classe controla seus próprios dados
 
-* Aula 04: Criação do Projeto
-* Aula 05: Autoload (infraestrutura)
-* Aula 06: Modelagem OO (abstração)
-* Aula 07: Introdução ao SRP
+### 10.4 Resultado
 
-## Mensagem Principal
+Sistema mais:
 
-> **Código funcional não é sinônimo de código bem projetado**.
-> O SRP existe para garantir **manutenção, clareza e escalabilidade**.
+* Modular
+* Organiado
+* Flexível
 
-### Testando as vantagens do SRP
+## Aula 11 - Testando as Vantagens do SRP
 
-Incluir as seguintes validações para os itens:
+### 11.1 Mudança proposta
 
-Não permitir itens com valores zerados ou negativos. Se o valor do item for zerado ou negativo o sistema deve retornar `false`, cao contrário `true`.
+Adicionar validações:
 
-Não permitir itens com descrições vazias. Se a descrição do item estiver vazio o sistema deve retornar `false`, caso contrário `true`.
+* Item não pode ter valor ≤ 0
+* Item não pode ter descrição vazia
+
+### 11.2 Sem SRP
+
+Validação feita em `CarrinhoCompra`
+
+#### Problemas
+
+* Classe cresce demais
+* Regra duplicada
+* Difícil reaproveitamento
+
+### 11.3 Com SRP
+
+Validação feita em `Item`
+
+#### Benefícios
+
+1. **Local correto da regra**
+    A regra pertence ao objeto correto
+2. **Reutilização**
+    Pode usar validação em qualquer lugar
+3. **Manutenção simples**
+    Mudou a regra? → altera só `Item`
+4. **Código limpo**
+    Classes continuam pequenas e focadas
+
+## Conclusão Geral
+
+O que é necessário fixar:
+
+### 1. SRP não é sobre dividir por dividir
+
+É sobre **responsabilidade clara**
+  
+### 2. Pergunta-chave
+
+> "Por que essa classe mudaria?"
+
+Se houver mais de uma resposta → problema
+
+### 3. Classes devem ser especializadas
+
+| Classe         | Responsabilidade |
+| -------------- | ---------------- |
+| CarrinhoCompra | Gerenciar itens  |
+| Item           | Representar item |
+| Pedido         | Controlar pedido |
+| EmailService   | Enviar e-mail    |
+
+#### 4. Benefícios reais
+
+* Código mais organizado
+* Fácil manutenção
+* Alta reutilização
+* Menor impacto de mudanças
+
+### Regra prática para o dia a dia
+
+> Se uma classe começa a crescer muito ou “saber demais”, divida ela.
