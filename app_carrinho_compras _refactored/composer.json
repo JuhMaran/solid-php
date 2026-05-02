@@ -12,5 +12,7 @@
             "email": "julianemaran@gmail.com"
         }
     ],
-    "require": {}
+    "require-dev": {
+        "phpunit/phpunit": "^9.0"
+    }
 }
