@@ -8,6 +8,18 @@ Muito bem dando continuidade ao estudo dos princípios sólidos. A partir dessa 
 
 ![ETL - Extract Transform Load](./../images/003_ETL.png)
 
+Arquivos CSV e TXT --Extrai--> ETL (Transforma) --Carrega--> DESTINO (exemplo: banco de dados)
+
+### Sobre ETL
+
+_Explicar/Responder as perguntas abaixo_
+
+1. O que é ETL?
+2. Quais suas etapas?
+3. Para que serve?
+4. Qual sua importância?
+5. Quais são as ferramentas comuns?
+
 ## 18. Projeto ETL - Lendo um arquivo CSV
 
 ## 19. Projeto ETL - Lendo um arquivo TXT
