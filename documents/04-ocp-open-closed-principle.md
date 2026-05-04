@@ -29,3 +29,29 @@ _Explicar/Responder as perguntas abaixo_
 ## 21. Refactoring do Projeto - Aplicando o Princípio na Prática
 
 ## 22. Testando as Vantagens do OCP
+
+## Comandos
+
+```bash
+php ../composer.phar init
+```
+
+## Código
+
+```json
+{
+    "name": "julia/app_etl",
+    "autoload": {
+        "psr-4": {
+            "AppEtl\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "JuhMaran",
+            "email": "julianemaran@gmail.com"
+        }
+    ],
+    "require": {}
+}
+```

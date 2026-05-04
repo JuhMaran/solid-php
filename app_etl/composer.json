@@ -1,0 +1,15 @@
+{
+    "name": "julia/app_etl",
+    "autoload": {
+        "psr-4": {
+            "Julia\\AppEtl\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "JuhMaran",
+            "email": "julianemaran@gmail.com"
+        }
+    ],
+    "require": {}
+}
