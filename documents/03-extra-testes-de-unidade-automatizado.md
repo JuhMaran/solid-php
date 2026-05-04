@@ -1,102 +1,234 @@
 # Seção 3: Extra - Implementando Testes de Unidade Automatizados
 
+Esta seção introduz **testes de software**, com foco prático em **testes de unidade automatizados** usando PHPUnit. O objetivo é mostrar como incorporar testes no dia a dia e como isso se conecta às boas práticas de desenvolvimento (incluindo SOLID).
+
 ## Aula 12 - O que são testes de software?
 
-Na sala eu vou falar sobre o que são os testes de software. Essa pergunta parece bastante óbvia mas ainda é muito comum encontrar desenvolvedores que não implementam essas atividades no dia a dia seja por falta de interesse falta de organização do tipo de trabalho ou mesmo por falta de conhecimento no assunto como nesse curso estamos falando de boas práticas de programação. E esse tema caminha de mãos dadas com a implementação de testes. Eu resolvi incluir esse conteúdo extra para que você possa incorporar as rotinas de testes em suas atividades do dia a dia como programador caso claro você ainda não tenha essa prática. Bom primeiro é importante compreender que existem dezenas talvez centenas de metodologias de testes diferentes aqui nesse slide. Temos alguns exemplos apenas para ilustrar temos testes de Aceitação do usuário, Caixa-branca, Caixa-cinza, Caixa-preta, Testes de Configuração, Funcional, Carga, Instalação, Integração, Interface, Operacional, Performance, Positivo-negativo, Regressão, Segurança, Stress, **Unidade**, Volume e muitos outros. Todas essas metodologias de testes existe uma que podemos fazer uso no dia a dia na produção de programadores. Eu me refiro à metodologia de testes de unidade também conhecida como testes unitários ou teste de unidade feito em um nível de componentes função ou classe e o teste que olha para as unidades individuais é um software. Nessa sessão vamos falar sobre testes de unidade automatizados com foco na linguagem de programação PHP utilizando o PHPUnit. Portanto se você utiliza outra linguagem de programação fique tranquilo a minha sugestão é que você após aprender os conceitos explicados aqui incorpora em seus projetos uma ferramenta de testes similar relativa a sua linguagem de programação já é conhecido que a correção de bugs nas etapas finais do desenvolvimento de um software chega a ser até 100 vezes mais cara. Se esses mesmos bugs fossem corrigidos nas etapas iniciais de desenvolvimento. Por essa razão muitas empresas profissionais e equipes já aderiram ou estão aderindo ao Método de Desenvolvimento conhecido como TDD acrônimo de _Test Driven Development_ ou em português Desenvolvimento Orientado a Testes como o próprio nome sugere. A ideia consiste em criar primeiros testes para na sequência desenvolver as funcionalidades do software. Esse portanto se torna um cenário perfeito para a utilização da metodologia de testes de unidade. Portanto agora que você já sabe o que é o TDD e a sua importância e também já sabe que para atendê-lo podemos utilizar a metodologia de testes de unidade. Chegou a hora de partir para a prática. Até a próxima aula.
+### Conceito Central
 
-### Tipos de Testes
+Testes de software são **processos para verificar se o sistema funciona conforme o esperado**, identificando erros antes que cheguem ao usuário final.
 
-Aceitação do usuário, Caixa-branca, Caixa-cinza, Caixa-preta, Configuração, Funcional, Carga, Instalação, Integração, Interface, Operacional, Performance, Positivo-negativo, Regressão, Segurança, Stress, ***Unidade**, Volume ...
+### Principais Ideias
+
+* Existem vários tipos de testes, como:
+  * Funcionais, integração, performance, segurança, regressão, aceitação do usuário, Caixa-branca, Caixa-cinza, Caixa-preta, Configuração, Carga, Instalação, Interface, Operacional, Positivo-negativo, Stress, Volume, etc.
+* O foco da aula é:
+  * **Teste de Unidade (Unit Test)**
 
 ### Teste de Unidade
 
-Método de Desenvolvimento TDD (_Test Driven Development_ ou em português Desenvolvimento Orientado a Testes).
+* Testa **partes pequenas do sistema**:
+  * Funções
+  * Métodos
+  * Classes
+* Objetivo: garantir que cada unidade funcione isoladamente.
+
+### Por que isso é importante?
+
+* Bugs corrigidos no final custam até **100x mais**.
+* Testes ajudam a:
+  * Detectar erros cedo
+  * Melhorar a qualidade do código
+  * Evitar regressões
+
+### TDD (Test Driven Development)
+
+* Desenvolvimento orientado a testes:
+  1. Escreve o teste primeiro
+  2. Depois implementa o código
+* Benefício:
+  * Código mais confiável e bem estruturado
 
 ## Aula 13 - Incluindo o PHPUnit no projeto via Composer
 
-Na aula o nosso objetivo é bem simples. Nós vamos apenas incluir o PHPUnit no nosso projeto para que a partir da próxima aula seja possível fazer os testes unitários ou então vamos lá. O primeiro passo é acessar o nosso projeto. Eu vou trabalhar aqui com o app_carrinho_compras_b porque esse app nós implementamos aqui RSP ou Single Responsibility Principle, ou seja o Princípio da Responsabilidade Única é esse fato. Essa conduta acaba facilitando muito a implementação de testes unitários justamente porque cada classe cada componente que será testado tem apenas uma única responsabilidade. Isso facilita bastante o nosso trabalho. Então vamos lá para fazer a inclusão do PHPUnit através de um projeto PHP que inclui o Composer é algo bastante simples basta através da linha de comando acessar o diretório do projeto e executar o comando `require` do Composer para trazer a sua respectiva dependência. Olha só para facilitar eu vou acessar aqui via Explorer o diretório do projeto onde está a aplicação o carrinho de compras beta só para copiar aquilo mas voltar aqui para a linha de comando ou acessar esse diretório. Se você se lembra bem com um nível acima dele está o nosso Composer.phar. Então basicamente nada vale executar aqui `php ../` subiram no nível e através do `compose.phar`. Nós vamos executar o comando `require` passando a frente `--dev`. Porquê. Porque nós vamos incluir uma dependência que só faz sentido no contexto de desenvolvimento ou seja depois que a nossa aplicação for voltada para o pomposo Composer não faz sentido subir para uma mesa de produção. Todas as nossas classes de teste. Isso carregaria o outlook do Composer de forma desnecessária. Nós iríamos subir vários arquivos que não fazem sentido no contexto de uma aplicação de produção. Enfim por isso é importante colocar as dependências de desenvolvimento na dimensão de teste da nossa aplicação. Na sequência nós podemos informar aqui qual dependência queremos baixar. Nesse caso a `phpunit/phpunit`. E aí eu vou citar também a versão. Nós vamos trabalhar com a versão 9.0. Basta utilizar aquele acento circunflexo indicando que qualquer versão nesse momento de gravação do curso há 9.0 é a versão mais atual do phpunit e eu sugiro que você marque essa versão para garantir que o seu ambiente esteja idêntico ao ambiente que será testado ao longo desse treinamento. Eu vou passar aqui mais um frete que será o flag traço traço e traço distinto. Esse Frade aqui indica que nós queremos dar preferência para o download e instalação das dependências contidas dentro do próprioNa aula o nosso objetivo é bem simples. Nós vamos apenas incluir o PHPUnit no nosso projeto para que a partir da próxima aula seja possível fazer os testes unitários ou então vamos lá. O primeiro passo é acessar o nosso projeto. Eu vou trabalhar aqui com o app_carrinho_compras_b porque esse app nós implementamos aqui RSP ou Single Responsibility Principle, ou seja o Princípio da Responsabilidade Única é esse fato. Essa conduta acaba facilitando muito a implementação de testes unitários justamente porque cada classe cada componente que será testado tem apenas uma única responsabilidade. Isso facilita bastante o nosso trabalho. Então vamos lá para fazer a inclusão do PHPUnit através de um projeto PHP que inclui o Composer é algo bastante simples basta através da linha de comando acessar o diretório do projeto e executar o comando `require` do Composer para trazer a sua respectiva dependência. Olha só para facilitar eu vou acessar aqui via Explorer o diretório do projeto onde está a aplicação o carrinho de compras beta só para copiar aquilo mas voltar aqui para a linha de comando ou acessar esse diretório. Se você se lembra bem com um nível acima dele está o nosso Composer.phar. Então basicamente nada vale executar aqui `php ../` subiram no nível e através do `compose.phar`. Nós vamos executar o comando `require` passando a frente `--dev`. Porquê. Porque nós vamos incluir uma dependência que só faz sentido no contexto de desenvolvimento ou seja depois que a nossa aplicação for voltada para o pomposo Composer não faz sentido subir para uma mesa de produção. Todas as nossas classes de teste. Isso carregaria o outlook do Composer de forma desnecessária. Nós iríamos subir vários arquivos que não fazem sentido no contexto de uma aplicação de produção. Enfim por isso é importante colocar as dependências de desenvolvimento na dimensão de teste da nossa aplicação. Na sequência nós podemos informar aqui qual dependência queremos baixar. Nesse caso a `phpunit/phpunit`. E aí eu vou citar também a versão. Nós vamos trabalhar com a versão 9.0. Basta utilizar aquele acento circunflexo indicando que qualquer versão nesse momento de gravação do curso há 9.0 é a versão mais atual do phpunit e eu sugiro que você marque essa versão para garantir que o seu ambiente esteja idêntico ao ambiente que será testado ao longo desse treinamento. Eu vou passar aqui mais um frete que será o flag `--prefer-dist`. Esse prefer aqui indica que nós queremos dar preferência para o download e instalação das dependências contidas dentro do próprio phpunit. Em outras palavras o nosso projeto ele possui dependências e o pé de apoio também possui dependências. Quando nós utilizamos aqui o professor disse Nós estamos falando para incluir essa dependência dentro do nosso projeto que nós queremos baixar as dependências desse projeto que já estão incluídas na distribuição dele. Se nós admitirmos aqui essa instrução o que vai acontecer aqui nós faremos o download do phpunit. Ele vai verificar o português desse projeto vai ver que existem várias dependências de produção e vai fazer o download dessas dependências de produção através dos repositórios dessas dependências na internet. Ou seja ao utilizar o efeito disto nós vamos baixar as dependências que já estão disponíveis na versão de produção desse pacote do phpunit. Então o download vai ser inclusive mais rápido. Olha só vou teclar Enter. E aí é só aguardar a finalização do download e da instalação desse pacote. Muito bem. A instalação foi finalizada e o ambiente levou cerca de dois minutos. Demora um pouco mesmo. Reparo que no meu caso todas as dependências foram instaladas a partir do próprio quer porque eu já havia feito instalações anteriores dessa versão do PHP único para testes. Então pra você o seu hobby. A mensagem aqui deve ser de download antes que a dependência foi baixada. Portanto um pouquinho diferente aqui a mensagem que apareceu pra mim mas o importante finalizar o processo com sucesso e aí pra ter certeza sobre a instalação basta voltar aqui no seu projeto e acessar o arquivo composer.json. Repare que nós temos aqui mais uma entrada não par chave valor ou as dependências de Desenvolvimento Legal phpunit na versão 9 instalada no nosso projeto. Na próxima aula nós vamos começar a implementar os nossos testes então até lá.
+### Objetivo
+
+Preparar o ambiente para executar testes.
+
+### Conceitos importantes
+
+#### 1. Dependências de desenvolvimento
+
+* PHPUnit é instalado com:
+  
+  ```bash
+  composer require --dev phpunit/phpunit ^9.0
+  ```
+
+* `--dev`:
+  * Indica que **não vai para produção**
+  * Evita incluir código de teste no sistema final
+
+#### 2. Organização do projeto
+
+* Após instalação:
+  * PHPUnit fica em `vendor/`
+  * Configuração no `composer.json`
+
+#### 3. Relação com SOLID
+
+* O uso do **SRP (Single Responsibility Principle)** facilita testes:
+  * Cada classe tem **uma única responsabilidade**
+  * Mais fácil testar isoladamente
 
 ## Aula 14 - Implementando nosso Primeiro Teste
 
-Muito bem agora que o tio já foi incluído em nosso projeto. Chegou a hora de fazermos o nosso primeiro teste então aqui no diretório projeto app_carrinho_compras_b eu vou criar um novo diretório e eu vou chamar esse diretório de test. Ele poderia ter qualquer nome mas por convenção eu sugiro que você utilize esse termo para. Dentro desse diretório. Nós vamos criar uma classe. Por quê. Porque o PHPUnit baseado no paradigma de orientação a objetos. Então todos os nossos testes serão classes. Então vamos começar aqui criando uma classe chamada itemTest. Repare que no final do nome da nossa classe por convenção nós utilizamos o termo teste. Então você pode nomear a sua classe seguindo o padrão quem eu quiser. Mas lembre se de no final incluir o termo teste para você saber que essa classe é uma classe de testes. E aí vamos colocar aqui a extensão do .php. Vamos iniciar aqui a tese do PHP e vamos começar definindo a nossa classe de testes. O primeiro detalhe importante aqui é que toda a classe de teste do PHPUnit precisa estender a classe TesteCase quando nós fizemos o download do PHPUnit para dentro do nosso projeto aqui no diretório vendedora só ele baixou diversas dependências e todas as dependências necessárias para PHPUnit e aqui dentro do diretório phpunit, phpunit novamente. Nós temos o src, o Source, os fontes do PHPUnit. E aqui nós temos só com o diretório Framework e aqui dentro do diretório framework nós temos essa classe TestCase que é utilizada para todas as classes de teste do PHPUnit para que seja possível utilizar essa classe. Nesse contexto nós precisamos dar um `use` do namespace `PHPUnit\Framework\TestCase;`. Dessa forma nós vamos trazer a classe TestCase para esse contexto para que ela seja estendida e não se preocupe muito em como, lembre-se que o autoload do Composer já está configurado. Então o próprio upload vai fazer esses carregamentos para nós e nós vamos poder utilizar esses recursos através das referências de namespace ok de modo bastante prático. O nosso próximo passo é criar um método, isso porque todos os testes que faremos serão na prática métodos que iremos criar dentro de classes e todos os métodos serão públicos. Vamos começar aqui criando um método que eu vou chamar de `testEstouFuncionando()`. Repare que eu estou utilizando aquele padrão que é camelCase para a definição do nome desse método e por convenção. Nós iniciamos o nome do método com o termo `test` indicando que é um método de teste na nossa classe. Bacana esse método ele vai servir apenas para verificarmos se estamos de fato conseguindo executar o PHPUnit dentro da nossa aplicação, dentro da estrutura do nosso projeto. Então não se preocupe com essa implementação. Eu vou escrever aqui algumas instruções, mas não se preocupe com isso ok. O importante é que você reproduza essa codificação aí só para testar nos para ver se os nossos testes irão de fato funcionar. Mais adiante nós entraremos nos detalhes ok. Então eu vou declarar uma variável chamada `valor` que vai receber aqui `10`. Na sequência eu vou executar o método chamado `assertEquals`. Repare que eu estou utilizando aqui `this` porque é o método `assertEquals` que está sendo herdado de TesteCase. Então até aqui nenhuma novidade. Ok ou então o método `assertEquals` espera comparar dois valores para verificar se esses valores são iguais. Então aqui como um primeiro parâmetro eu vou passar o `valor` a variável que nós definimos em cima é nossa. Por isso eu vou fixar aqui o valor `11`, mas não se preocupe com isso ainda vamos apenas testar se é possível executar a nossa classe de teste através do PHPUnit. Se vai funcionar bem então só dentro do diretório `vendor/` repare que nós temos um diretório `bin/` quando realizamos a instalação do PHPUnit. Ele criou automaticamente um arquivo chamado `phpunit.bat`. Isso no caso do Windows. Se você estiver utilizando OsX ou Linux nós estaríamos falando aqui do `phpunit` sem a extensão apenas o script aqui. No caso do Windows nós temos um `bat`. Esse script ele tem a configuração necessária para executar os testes das nossas aplicações. Considerando a estrutura do autoload do Composer para o nosso projeto. é por isso que ele vai saber reconhecer os namespaces tudo de modo automático e prático para executar a nossa classe de testes. Nós podemos aqui através da linha de comando. No caso do Windows através do prompt do DOS, nós podemos acessar o diretório raiz do projeto e a partir do diretório raiz basta acessar o diretório `vendor`, utilizar aqui `\` (barra invertida), `bin`, `\` (barra invertida) novamente, `phpunit.bat`, novamente. Se você estiver no OsX ou no Linux basta não utilizar aqui essa extensão. No caso do Windows somos utilizar objetos. Ao executar esse comando repare que ele é reconhecida ele retorna para a gente uma série de opções de uso desse comando. Nesse script no nosso caso nós vamos apenas submeter o tipo de teste que nós queremos executar (`vendor\bin\phpunit.bat test\itemTest.php`). Nesse caso o item teste lembrando que nós estamos aqui no diretório raiz da aplicação é para direcionar para esses scripts uma classe de teste basta que na sequência informar o diretório de testes Barra com o nome da classe que queremos testar. Nesse caso teste o ponto PHP a classe que nós criamos agora pouco. Ao executar essa instrução ela só teve um erro aqui falando que o arquivo não foi encontrado porque o teste aqui no final sempre foi. Agora sim vamos executar a instrução. Repare que ele retorna para nós uma série de informações. Novamente não se preocupe com isso ainda. A partir das próximas aulas nós vamos entender melhor o que são os testes o que são as asserções ou o que são as falhas. Por quê. Que o nosso teste falhou nesse caso repare que o esperado aqui seria que o valor fosse 11 mas a informação passada aqui foi 10 mas não se preocupe com isso ainda. Na próxima aula nós vamos nos aprofundar nesses detalhes. O importante é que na sala você consiga executar corretamente pois a partir de vender babando do seu projeto então aproximá-la.
+### Estrutura básica de um teste
+
+#### 1. Criar pasta
+
+```text
+/test
+```
+
+#### 2. Criar classe de teste
+
+```php
+class ItemTest extends TestCase
+```
+
+#### 3. Importar
+
+```php
+use PHPUnit\Framework\TestCase;
+```
+
+### Regras importantes
+
+* Classe deve:
+  * **Estender `TestCase`**
+* Métodos de teste:
+  * Devem ser `public`
+  * Devem começar com `test`
+
+### Exemplo conceitual
+
+```php
+public function testAlgo() {
+    $this->assertEquals(valorEsperado, valorAtual);
+}
+```
+
+### Execução do teste
+
+```bash
+vendor/bin/phpunit test/ItemTest.php
+```
+
+### Resultado
+
+* PHPUnit mostra:
+  * Quantidade de testes
+  * Falhas
+  * Sucessos
 
 ## Aula 15 - Testes de Asserções
 
-Na aula anterior nós criamos uma classe de teste é um método apenas para verificar se o PHPUnit estava de fato funcionando no contexto do nosso projeto. A partir dessa aula nós vamos de fato submeter as unidades do nosso projeto às unidades do nosso sistema para os testes unitários com PHPUnit. Bom pra começar eu gostaria só de fazer um ajuste aqui é o seguinte Repare que eu usei aqui só o nome da classe. Conversando com um caractere minúsculo se você se lembra bem nomes de classes por convenção por boas práticas começam com caracteres maiúsculas. Então vamos apenas fazer esse ajuste. Agora sim. Então eu vou começar removendo esse método e assim como o nome da classe que teste sugere nós vamos testar aqui aspectos do item da classe item no nosso sistema. Então vou abrir aqui a classe item. Nós estamos aqui atributos e métodos que podem ser submetidos para esses testes unitários. Vamos começar testando se na construção do nosso objeto de fato o estado inicial dos atributos estão sendo carregados. Então por exemplo nós podemos criar um método aqui na função pública sempre começando pelo termo teste e eu vou chamar esse teste de estado inicial. Bom a primeira coisa é fazer a instância da classe item pra gerar um objeto do tipo item. Então vamos utilizar aqui uma variável para receber a instância de item. Portanto o objeto é para utilizar essa classe no contexto nós precisamos importá-lo através do seu respectivo namespace. Repare que eu utilizo aqui o namespace e na sequência o nome da classe contida dentro desse namespace, legal. Bom agora que nós já temos a instância nós precisamos testar `getDescricao` e `getValor`, a espectativa quando um item é instanciado é de que na descrição seja igual ao vazio e o valor seja igual a zero. Então como é que nós podemos fazer esse teste? Simples, utilizando 'asserções do PHPUnit', cada asserção representa uma espécie de verificação para decidir se aquele teste passa ou não nos critérios. Repare que nesse caso nós temos um único teste representado aqui por um método e nós faremos duas asserções, duas verificações para saber se esse teste passa ou não. Então vamos lá. Uma dica interessante é que o PHPUnit possui uma documentação em português bastante completa. Eu vou acessá lo aqui para que você use como referência aí peguei o site é phpunit.de. Basta clicar aqui em 'Documentation'. Na sequência escolher o idioma de sua preferência vou colocar aqui em português do Brasil e olha só. Aqui tem uma seção justamente sobre as asserções. Olha a quantidade de asserções que podem ser feitas através do PHPUnit. Nós vamos testar algumas aqui e eu tenho certeza que você vai pegar o jeito caso você queira implementar outros tipos de asserções também. Então voltando aqui só para fazer as asserções basta utilizar o `this`, o `this` fará referência para o método dentro do TestCase que está sendo estendido por ItemTest. Por isso é fundamental que as classes de teste estendam o ItemTest e os tamanhos para que seja possível usar os métodos de inserção é aqui para fazer essa comparação por igualdade com os valores que são esperados. Nós vamos utilizar o método `assertEquals`. Aqui nós passamos dois valores, o valor esperado e o valor atual (`$this->assertEquals(<valor esperado>, <valor atual>);`). Lembrando que aqui na documentação nós podemos pesquisar artigos para ter acesso a esses detalhes. Então qual é o valor atual? Falando aqui da descrição o valor atual seria `getDescricao` do nosso objeto e o valor esperado seria vazio. Por quê. Porque nós esperamos que o valor seja vazio no instante em que a classe for distanciada. Já para o valor isso muda um pouco. Vou copiar aqui só para facilitar no caso do valor. O valor atual vem lá de getValor e nós esperamos que esse valor atual seja zero. Vamos remover aqui esse trecho de código e aqui está. Nós temos um método pra testar o estado inicial do item. Esse teste é baseado nos valores iniciais dos atributos de Descrição e Valor sem segredo. Então nós podemos salvar a nossa classe de testes. Voltar aqui na linha de comando e submeter essa classe novamente para um teste. Olha só vou teclar Enter, está lá. Repare que nós tivemos aqui um único teste sendo feito ok com um único método com duas asserções com essas duas validações do nosso teste bom vamos fazer aqui mais alguns testes nós podemos testar por exemplo o funcionamento dos métodos `getDescricao` e `setDescricao`, repare que nós estamos utilizando aqui os métodos getters e setters de modo fluído. Nós poderíamos utilizar os métodos mágicos get e set, mas quando estamos falando de testes unitários os métodos fluídos se encaixam melhor. Ou seja são os métodos getters e setters e que descrevem o atributo que estão afetando. Isso porque os métodos getters e setters mágicos podem retornar valores e tipos diferentes. Isso claro vai impactar nos testes. Lembrando que na programação é assim mesmo. Cada escolha representa uma renúncia num benefício se torna um pouco mais trabalhoso utilizar métodos getters e setters fluídos descritos para cada atributo, mas em compensação os testes se tornam mais eficientes. Você consegue fazer uma cobertura maior de testes em cima das suas classes. Bom então voltando aqui vamos criar mais um teste vou chamar aqui de `testGeteSetDescricao`. A descrição que nós vamos testar podemos atribuir aqui a uma variável poderia ser sei lá uma cadeira de plástico. Vamos criar aqui uma instância da classe Item. Vamos recuperar essa instância. Vou utilizar aquele mato no set de descrição Passando essa descrição portanto é esperado que o objeto passe a ter essa descrição. Nós podemos utilizar aqui assertEquals para verificar o valor esperado e atual. Então novamente qual é o valor atual ou valor atual nós vamos recupera lá do objeto getDescricao, perfeito utilizando esse método. Nós recuperamos a descrição que nós acabamos de definir para esse objeto e qual o valor esperado. Bom se eu 'setei' essa descrição o esperado é que o método retorne a ela mesmo. Então aqui nós temos mais um teste para verificar seus métodos set e get estão de fato funcionando. Nesse caso, para o atributo descrição. Vou voltar aqui na linha de comando. Vamos executar o nosso teste lá. Agora imagine por exemplo que o método get por algum motivo ter sido escrito errado e retornado aqui valor, por conta de um Ctrl + C, Ctrl + V, em algum trecho do código enfim pequenos detalhes acabam passando por isso que os testes são fundamentais justamente para pegar esses detalhes que passam desapercebido e por mais simplista que um teste possa ser importante que ele seja feito porque isso com certeza vai te ajudar. Primeiro os testes que obrigam a rever o seu código eles também nos obrigam a trabalhar com um certo padrão é claro. Pequenos detalhes podem se transformar em bugs complexos de serem 'debugados', testados enfim. Portanto pode parecer algo simples mas faz parte e com o tempo você vai criar testes mais complexos também. A ideia é que você aprimore a sua capacidade de submeter as unidades do seu sistema para testes cada vez mais eficientes, portanto esse amadurecimento também faz parte do processo. Mas vamos lá. Digamos que houve um erro, `getDescricao` está retornando um valor incompatível com o que deveria ser retornado. Olha só que bacana se submeter a nossa classe aqui para os testes. Repare que ele vai falar que nós tivemos dois testes tivemos duas asserções e duas falhas e esses detalhes das falhas podem ser vistos aqui em cima. Repare que ele usa uma falha no teste estado inicial Item, nos testes getDescricao e setDescricao.  Na linha 13 e 23 respectivamente. Então nós podemos voltar aqui e analisar a Linha 13 (`$this->assertEquals('', $item->getDescricao());`). Olha só. Que era esperado um texto vazio e retornou ao zero na linha 23 (`$this-assertEquals($descricao, $item->getDescricao());`). Era esperado essa descrição que o valor retornado aqui foi zero. Então vamos voltar aqui ao estado original problema identificado podemos voltar aqui na classe corrigir e aí vamos seguir aqui com os nossos testes. Eu vou fazer esse mesmo teste get e set para o valor. Olha só vou copiar aqui. Vou apenas ficar aqui só para agilizar um pouquinho o andamento da aula. O valor que nós vamos testar aqui pode ser por exemplo 35 e 42. Então nós faremos aqui o 7 do valor passando a variável valor e o esperado aqui é que esse valor seja compatível com o valor atual do item ou seja se estamos definindo 35 42 é esperado que esse valor seja definido no item e que ao retornar esse valor ou seja pegando esse valor atual que ele seja igual ao que é esperado ok vamos testar vou voltar aqui na minha informando está lá tivemos aqui três testes e quatro asserções e aí nós podemos deixar as coisas um pouco mais complexas mas lembrando que aqui na condição de programador você pode desenvolver os testes de acordo com as suas necessidades. Portanto vamos fazer algo um pouco mais complexo para que você possa entender essa flexibilidade aqui. Ainda com relação ao item nós podemos testar o método `itemValido()`. Olha só olhar aqui mais um método chamado de `testItemValido()` e aí nós podemos testar aqui três dimensões desse método. A primeira dimensão digamos assim 'seria submeter um item válido para o teste e retornar ok'. A segunda dimensão 'seria submeter um item inválido para o teste e retornar `false`'. Repare que retornar `false` para um item inválido indica que o nosso teste está ok. Ou seja, o esperado é esse comportamento mesmo se o item é inválido o método precisa retornar `false`. Ok nós podemos fazer isso aqui para a descrição e para o valor que são os dois aspectos desse método que são utilizados aqui para fins de teste. Então por isso que nós podemos tratar essas três dimensões nesse teste. Fazer essas três asserções para ele identificar se o método realmente trabalha conforme o esperado. Então aqui vou criar uma variável chamada item, vamos atribuir uma instância da classe item e aí nós podemos iniciar aqui 'setando' um valor vou passar aqui por exemplo 55 e na discrição. Vou passar essa mesma descrição que nós utilizamos aqui em cima. Vou aproveitar para corrigir o que escrevi errado aqui. Agora sim. Então aqui nós temos as características de um item válido para saber se de fato o método está se comportando corretamente nós podemos utilizar aqui `assertEquals` para verificar o esperado e o atual. Qual é o valor atual? O valor atual é o que vai ser retornado aqui do método. Vamos recuperar aqui muito bem como nós sabemos que essa configuração retorna `true`, então o esperado é que esse método retorne `true` também. Se voltarmos aqui na minha comando olha só, o teste passou, ok? Se por acaso não fosse feito aqui a atribuição de um valor, olha só, nós teríamos aqui uma falha, indicando o que era esperado era `true`. Mas foi o que foi retornado `false`. Aqui na linha 41, bacana. E aí nós podemos seguir aqueles nossos testes. Nós poderíamos testar o inverso. Vou copiar aqui só para facilitar essa instância. Essas duas atribuições vou colocar esse texto aqui acima. E aí Olha só aqui. O esperado é que se a descrição for vazia que o método retorne `false` pra nós. Então nós podemos copiar aqui essa asserção para fazer esse teste. Vamos dar uma olhada na linha de comando repare que todos os testes passaram. Mas se em algum momento ele tentar configurar aqui um item vale e olha só. Nós vamos ter na nossa seleção. Porquê. Porque configura um item válido. Portanto aqui será retornado mais o esperado e que fosse tornado falso. Claro que aqui há uma situação hipotética porque nós sabemos que essa configuração retornaria. Mas testar o oposto em algumas situações também faz sentido. Olha só aqui está era esperado falso mas retornou novamente nessa situação. Nós sabemos que o correto de fato era retornar. Nós estamos testando aqui se o falso de fato funciona pra discussão. Aqui está um valor estava aqui o valor vai ser zerado. Nós podemos passar aqui uma descrição correta. Eu esperava que o retorno seja falso. Tá lá. Passou no teste. E aí nós poderíamos testar aqui até uma quarta situação que seria retornar Falso caso todos os atributos estivessem inconsistentes. Ou seja todos os atributos envolvidos numa validação visitem não representassem juntos a situação tem validade. Então era só ficar mais uma asserção aí que pode ser feita nesse contexto também. Então nesse caso nós temos quatro testes porque temos quatro métodos e temos oito asserções porque nós temos dentro desses quatro métodos asserções que indicam a validação que estamos fazendo. Então nós exploramos bastante o acerto. Mas novamente aqui na documentação do pega bem onde você pode se aprofundar lendo as outras opções e se asserções lembrando que geralmente você vai encontrar o método não é. Por exemplo artigos que aqui na documentação você vai encontrar também o oposto desse método. Ou seja a seleção inversa. Bom que tal pratique um pouco. Experimente incorporar classes de testes para os outros componentes da nossa aplicação se você identificar algum teste bacana legal que você tenha implementado aí não deixe de compartilhar essa ideia no fórum do curso para auxiliar outros alunos também. Com certeza trocando essas idéias aqui no fórum do curso todo mundo aprende um pouquinho mais. Bom nós ainda temos alguns assuntos ainda sobre testes pra falar nessa sessão. Então até a próxima aula.
+### O que são?
 
-Nome da classe ajustado, de `itemTest` para `ItemTest`
+São **verificações** que validam o comportamento do código.
+
+### Principal método usado
+
+```php
+$this->assertEquals(esperado, atual);
+```
+
+### Exemplos de testes feitos
+
+#### 1. Estado inicial
+
+* Verifica valores padrão ao criar objeto:
+  * descrição = ''
+  * valor = 0
+
+#### 2. Getters e Setters
+
+* Testa se:
+  * Valor definido = valor retornado
+
+#### 3. Regras de negócio (`itemValido`)
+
+* Testa múltiplos cenários:
+  * Item válido → `true`
+  * Descrição vazia → `false`
+  * Valor zero → `false`
+  * Tudo inválido → `false`
+
+### Aprendizado importante
+
+* Testes ajudam a detectar erros simples (ex: getter errado)
+* Pequenos bugs podem ser identificados rapidamente
 
 ## Aula 16 - Criando um Provedor de Dados para Testes
 
-Nesta aula, o nosso objetivo é bem simples você vai aprender a como criar métodos provedores de dados para os nossos testes são os métodos Data Provider do PHPUnit. Dentro de uma mesma classe é possível ter um ou 'n' métodos que podem ser utilizados para prover esses dados. Para criar um método provedor de dados bem simples. Ele precisa ser público e aí basta aplicar um nome. Por exemplo vamos criar um Data Provider de valores para ser utilizado no método de teste aqui olha só. Repare que nós criamos o `testGeteSetValor()` 'setando' aqui dentro do método qual que seria o valor a ser testado. Então ao invés de fixar esse valor nós podemos criar um método que vai fornecer dados desse tipo para serem utilizados dentro do teste. Nós podemos chamar esse método de `dataValores()` por exemplo e aí o que é importante ter em mente que esse método tem que retornar obrigatoriamente um Array de Arrays, ok. Sendo que cada Array contido dentro desse retorno será utilizado para disparar o método de testes. Mas vamos por partes. Digamos que eu queira prover aqui valores para serem utilizados aqui dentro do método `testGeteSetValor()`, vou até copiar esse método para baixo para facilitar a leitura. Digamos que o que irá receber um valor aqui é que irá utilizar esse valor no teste. Eu quero testar aqui o valor por exemplo `100`, `-2` e `0`. Repare que eu estou submetendo para esse método um valor neutro que será o valor zero um valor negativo que tem um valor positivo. O objetivo do método é bem simples. Ele apenas verifica se o valor está sendo 'setado' e se o valor que foi 'setado' está sendo corretamente recuperado aqui na asserção. Mas qual que é ideia nós vamos vincular esse método. Esse Data Provider. Esse método de teste de modo que cada um desses Arrays dispare o método. Tal método seria disparado aqui uma vez aqui uma outra vez e aqui uma outra vez lembrando que nós poderíamos passar aqui por ser uma renda vários valores poderia passar mais e depois poderia passar um outro número. Depois poderia passar uma lei. Enfim todos esses valores seriam recuperados aqui no método que será associado como sendo um parâmetro. Então aquilo teria string nessa posição um outro valor numérico e assim consecutivamente. Claro que cada um desses erros contidos dentro de cada um desses vetores precisa obter esses respectivos parâmetros para que não haja erro na recepção dos valores.
+### Problema resolvido
+
+Evitar repetir testes para vários valores.
+
+### Solução: Data Provider
+
+* Método que retorna:
+
+```text
+array de arrays
+```
+
+### Funcionamento
+
+Cada array:
+
+* Executa o teste uma vez com valores diferentes
+
+### Estrutura
 
 ```php
-    public function testGeteSetValor($valor, $string, $num, $array)
-    {
-        $item = new Item();
-        $item->setValor($valor);
-        $this->assertEquals($valor, $item->getValor());
-    }
+/**
+ * @dataProvider dataValores
+ */
+public function testMetodo($valor) { ... }
 
-    public function dataValores()
-    {
-        return [
-            [100, '', 123, array()], //  1x - testGeteSetValor()
-            [-2, '', 123, array()],  // +1x - testGeteSetValor()
-            [0, '', 123, array()]   // +1x - testGeteSetValor()
-        ];
-    }
+public function dataValores() {
+    return [
+        [100],
+        [-2],
+        [0]
+    ];
+}
 ```
 
-Mas é importante ter em mente que cada um desses vetores/arrays irão disparar. O método que está sendo associado a ele que será amarrado a ele. Esse método precisa recuperar esses parâmetros na respectiva sequência. Como é que nós fazemos essa associação? Simples vamos apenas retirar aqui essas informações. Ok. Aqui no método que vai receber o data provider nós precisamos utilizar a seguinte sintaxe. Abrir aqui um comentário ok. Só que aqui no início nós precisamos utilizar dois asteriscos bastante atenção para esse detalhe q Barra asterisco asterisco asterisco asterisco Barra. E aqui nós passamos a instrução `@dataProvider dataValores` é informado aqui. Qual é o método. Ok é apenas o nome dele que será utilizado para disparar esse respectivo teste passando aqui para esses testes. Os parâmetros de acordo com os Arrays internos do Array que é retornado por esse respectivo método. Então essa é a sintaxe utilizada no PHPUnit para fazer com que o método seja utilizado como provedor de dados de outro método facilitando portanto a submissão de vários valores para testes e testando cada um desse conjunto de valores na chamada de seu respectivo método de testes. Então aqui nós temos um único método mas esse método será disparado três vezes com esses valores. Olha só vamos testar ou votar aqui na linha de comando. Vamos executar o nosso teste. Ele tem um erro aqui na linha 66 mas foi um erro de sintaxe dar uma olhada aqui. Faltou um ponto e vírgula. Agora sim soltar aqui tá lá. Então observe que ele identificou aqui seis testes e dez asserções. Por quê. Porque esse método ele foi executado três vezes. Se nós passássemos aqui mais um valor para teste nós teríamos aqui esse método sendo executado quatro vezes com mais uma asserção que passamos a ter sete testes e 11 asserções. Portanto os métodos Data Provider eles servem pra fornecer esse conjunto de parâmetros para serem utilizados nos nossos métodos e nós podemos ter um ou 'n' métodos provedores dados sendo que essa sintaxe já é utilizada para conectar um determinado método de teste a um determinado provedor de dados para testes. Ok nós ainda temos muitos assuntos pela frente então até a próxima aula.
+### Resultado
 
-## Comandos
+* Um único teste roda várias vezes
+* Aumenta cobertura de testes
+* Código mais limpo e reutilizável
 
-```powershell
-php ../composer.phar require --dev --prefer-dist phpunit/phpunit ^9.0
-vendor\bin\phpunit.bat
-vendor\bin\phpunit.bat test\itemTest.php
-```
+## Conclusão da Seção
 
-## Estrutura de Diretório do Instrutor do Curso
-  
-```text
-solid
-|--app_carrinho_compras
-|  |-- src/
-|  |   |-- CarrinhoCompra.php
-|  |-- vendor/
-|  |-- composer.json
-|  |-- composer.lock
-|  |-- index.php
-|--app_carrinho_compras_b
-|  |-- src/
-|  |   |-- CarrinhoCompra.php
-|  |   |-- EmailService.php
-|  |   |-- Item.php
-|  |   |-- Pedido.php
-|  |-- test/
-|  |   |-- itemTest.php
-|  |-- vendor/
-|  |   |-- bin/
-|  |   |-- composer/
-|  |   |-- doctrine/
-|  |   |-- myclass/
-|  |   |-- nikic/
-|  |   |-- phar-io/
-|  |   |-- phpunit/
-|  |   |   |-- ...
-|  |   |   |-- phpunit/
-|  |   |   |   |-- ...
-|  |   |   |   |-- src/
-|  |   |   |   |   |-- Framework
-|  |   |   |   |   |   |-- ...
-|  |   |   |   |   |   |-- TestCase.php
-|  |   |   |   |   |-- ...
-|  |   |-- sebastian/
-|  |   |-- theseer/
-|  |-- composer.json
-|  |-- composer.lock
-|  |-- index.php
-|-- composer.phar
-```
+### Principais aprendizados
+
+* Testes são essenciais para qualidade de software
+* Testes de unidade:
+  * São rápidos
+  * Testam partes isoladas
+* PHPUnit permite:
+  * Criar testes estruturados
+  * Validar comportamento com asserções
+* Boas práticas (como SOLID) facilitam testes
+* Data Providers aumentam eficiência dos testes
+
+## Resumo
+
+Nesta seção, você aprendeu que testar **não é opcional**, é parte do desenvolvimento profissional.
+
+O foco foi mostrar como validar pequenas partes do sistema usando testes automatizados.
+
+Você viu que:
+
+* Cada classe deve ser testável
+* Testes garantem que mudanças não quebrem o sistema
+* Ferramentas como PHPUnit automatizam tudo isso.
+
+E o mais importante:
+
+> Código bem estruturado (ex: seguindo SOLID) é naturalmente mais fácil de testar.
