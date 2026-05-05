@@ -71,6 +71,170 @@ Retornando no browser. Vamos atualizar. Está lá, tudo funcionando corretamente
 
 ## 19. Projeto ETL - Lendo um arquivo TXT
 
+Nessa aula nós vamos implementar o fluxo de leitura de arquivos TXT dentro do nosso projeto. Nesse primeiro momento nós não vamos levar em consideração nada do Open/Closed Principle. A ideia é desenvolvermos esse projeto com essa proposta de modo funcional e aí sim na sequência entendermos o que é o Open/Closed Principle, para aí sim com base no entendimento do que é esse princípio aplicar as melhorias dentro do nosso projeto. Ou seja, primeiro vamos desenvolver uma aplicação que algo sem olhar para esse princípio e depois vamos entender a teoria e como podemos aplicar essa teoria na prática fazendo o refactoring no nosso projeto. Então vamos lá. Voltando aqui no nosso código. Olha só nós temos aqui a função que leu o arquivo nesse momento utilizando a classe leitor, que olha para o arquivo CSV. Na classe Arquivo.php. Nós vamos implementar um novo método um método que vai ler agora arquivos TXT. Ele continua recebendo o caminho e continua abrindo o arquivo para leitura. O que muda é que nós não vamos utilizar o método `fgetcsv()`, porque agora nós estamos falando de um TXT e a forma de leitura muda um pouco. Então aqui no `while()`, olha só nós vamos retirar essa condição e aí nós vamos recuperar cada uma das linhas contidas dentro do nosso arquivo TXT. Para fazer isso eu vou criar uma variável chamada linha que vai receber o retorno de `fgets()` e nós vamos passar aqui como parâmetro o nosso `$handle`, a variável que guarda o resource, o arquivo aberto. A cada execução do `fgets()` nós podemos através de uma outra função que é `feof` testar pelo fim do arquivo. E esse teste pode ser feito aqui olha só dentro do `while()`. Basta utilizar a função `feof()`, passando aqui o nosso `$handle`, resource.
+
+ ```php
+ while(feof($handle)) {}
+ ```
+
+Então na prática a cada execução da função `fgets()` o ponteiro interno retorna de leitura do arquivo é incrementado. E a função `feof()`, retorna para nós, se esse ponteiro em questão aponta para o final do arquivo. Enquanto esse ponteiro não apontar para o final do arquivo, `feof()` vai retornar para nosso `false`. Ou seja, somente quando chegar no final do arquivo é que `feof()` retornaria `true`. Então por isso nós precisamos pegar esse retorno e utilizar aqui a negação. Porque enquanto houver linhas para serem lidas a função `feof()` vai retornar `false` para nós. Então nós podemos inverter aqui o resultado desse método dessa função para que o `while()` seja executado enquanto houverem linhas para serem recuperadas aqui pelo método `fgets()`. Na sequência, podemos dar um `echo` dessa variável `$linha` para verificar como que o nosso amado está se comportando e para implementar o nosso método aqui no fluxo da nossa aplicação. Nós precisamos voltar aqui no `index.php` e fazer a leitura do arquivo txt. Até então nós estávamos lendo o arquivo CSV. Então nós podemos fazer o seguinte. Aqui na leitura do arquivo dentro da classe leitor nós podemos verificar qual tipo de arquivo nós vamos ler. Nós temos aqui o nome do arquivo e o nome do arquivo contém a extensão dele. Então nós podemos testar a extensão para decidir se vamos ler o arquivo CSV utilizando o método `lerArquivoCSV()` ou o método `lerArquivoTXT()`. Então, teremos um `if`, em ambos os casos vamos passar o `$caminho`. Então por exemplo eu posso criar aqui uma variável chamada extensão que vai receber aqui o `explode()` e o nome do arquivo. Vamos utilizar como parâmetro para usar esse `explode()` o caracter `.` e na sequência passar a string `$this->getArquivo()` que corresponde ao `explode` que queremos fazer. E aí nós teremos aqui, no nome do arquivo, através do ponto com índice zero que conterá a descrição do arquivo e um índice 1 conterá sua respectiva extensão. Então nós podemos utilizar aqui no teste. Então posso fazer um `if` para verificar se a extensão na posição 1 é igual a CSV. Se for, vamos utilizar o método `lerArquivoCSV`, caso contrário, se a extensão for igual a TXT, vamos executar o método `lerArquivoTXT` Feito isso nós podemos voltar aqui no `index.php` e apenas corrigir aqui o nome do arquivo. Nesse caso o txt é para agilizar um pouco o andamento dessa aula, eu disponibilizar como recurso um arquivo, compactado chamado `arquivos_necessarios.zip`, é só fazer o download descompactar. Nós queremos que o diretório Arquivos dentro desse diretório nós teremos `dados.txt`, que será testado nessa aula. Incluir o arquivo dados.txt no diretório `app_etl/arquivos/`, junto com o arquivo `dados.csv`. Voltando aqui para o código. Repare que nós temos os dois arquivos portanto já estamos preparados aqui para ler dados.txt e a diferença olha só que no caso do dados.txt pra deixar as coisas um pouco mais complexas ao invés de separar os valores nas colunas por ponto e vírgula como é o caso aqui do CSV. Nós vamos utilizar aqui posições. Ou seja, o CPF ele estará em uma determinada posição de até o nome em uma determinada posição de até o e-mail, a mesma coisa, ok!?. Então nós vamos utilizar aqui uma espécie de formato de importação em que as colunas serão importantes para nós para decidir qual o conjunto de colunas compõe determinadas informações durante o processo de leitura do arquivo. Bom então vamos testar. O leitor já está ajustado com base na extensão determinada no nome do arquivo. Nós estamos determinando qual método será chamado e o método aqui do arquivo `lerArquivoTXT()` também já está implementado com o `echo $linha`, então voltando aqui no browser (navegador) eu vou atualizar legal. Repare que nós tivemos aqui sucesso na leitura. Repare que aqui no final nós temos a impressão de um array vazio.
+
+```text
+35495984080Gustavo Santos                gustavo.santos@contato.com.br
+99422057051Marcela Moreira               marcela.moreira@contato.com.br
+00119677067Carlos Silva                  carlos.silva@contato.com.br
+22079999044Rosana Marques                rosana.marques@contato.com.brArray
+(
+)
+```
+
+Isso está acontecendo porque aqui no `index.php` nós temos esse `print_r` e nesse momento ele está tentando exibir aqui o retorno de `get` dos dados do arquivo que representa o atributo dados do arquivo que nesse momento não está sendo preenchido. Nós estamos apenas exibindo aqui `$linha`. Nós ainda precisamos 'setar' os valores dentro do `array` de dados,  mas antes de fazer isso nós precisamos determinar que essas posições. Então repare que o CPF, a informação correspondente ao CPF vai da coluna zero nesse caso,  embora aqui seja reconhecido como coluna 1, nós vamos entender que é a coluna 0. E o CPF tem 11 dígitos. Como podemos ler isso? Simples, utilizando o método sub string nativo do PHP. Vou submeter `$linha` para o método `substr()`, falando que essa string, nós queremos recuperar dessa string, a partir da posição do zero com 11 caracteres.
+
+```php
+echo substr($linha, 0, 11); // CPF
+```
+
+Olha só vamos testar ou voltar aqui no navegador vou atualizar tá lá todos os CPFs estão aqui.
+
+```text
+35495984080994220570510011967706722079999044Array
+(
+)
+```
+
+Incluir quebra de linha para facilitar a leitura: `echo '<br>';`
+
+```text
+35495984080
+99422057051
+00119677067
+22079999044
+Array
+(
+)
+```
+
+Agora sim que isso significa que nós podemos pegar essa informação e já passar aqui para `setDados` na posição que é esperado o CPF, então vamos confirmar aqui em `setDados`. Olha só, CPF fica aqui como segundo parâmetro. Então nós vamos passar aqui essa informação.
+
+```php
+$this->setDados($linha[0], substr($linha, 0, 11), $linha[2]);
+```
+
+Agora vamos ver a questão do nome. Repare que o nome ele começa aqui da posição 12. Nesse caso nós vamos considerar posição 11 porque a sub string trata a partir da posição 0. Então aqui da posição 11, temos 30 caracteres. Então vou aqui, nós vamos recuperar dessa mesma linha a partir da posição 11. Total de 30 caracteres. Vamos testar. Vou voltar aqui no browser. Vou atualizar tá lá estamos recuperando seu nome. Nós podemos passar por esse parâmetro aqui para `setDados` na posição em que o nome é inspirado.
+
+```php
+$this->setDados(substr($linha, 11, 30), substr($linha, 0, 11), $linha[2]);
+```
+
+Então vamos confirmar só o nome fica aqui na primeira posição. Então nós podemos passar aqui. E por fim nós precisamos passar o e-mail. Se observarmos em dados pouco TXT o e-mail começa aqui na coluna 42 portanto com 41 ou maior e-mail que nós temos aqui. Possui 30 caracteres. Então nós podemos falar que o e-mail é parte da coluna 41 e podemos colocar aqui mais 50 posições mais 50 caracteres por e-mail.
+
+Isso significa que ele poderia ser bem maior aqui não poderia ter mais caracteres.
+
+Enfim já vamos deixar aqui uma quantidade maior para a leitura do e-mail.
+
+```php
+$this->setDados(substr($linha, 11, 30), substr($linha, 0, 11), $linha[2]);
+```
+
+Bacana tudo salvo vou voltar aqui no navegador vamos atualizar tá lá está não se recuperar no e-mail corretamente. Aqui em sete dados o e-mail é esperado. A terceira posição no terceiro parâmetro. Então nós podemos cortar isso daqui a apagar essas duas instruções ou disso comentar. E nós vamos passar aqui na terceira posição. E aí para facilitar um pouco a leitura vou colocar essas informações aqui dentadas muito bem aqui nós temos um homem com nome CPF e o e-mail todo salvo. Vou voltar aqui no navegador vou atualizar tá lá. Repare que o nosso array está sendo retornado. 
+
+```text
+Array
+(
+    [0] => Array
+        (
+            [nome] => Gustavo Santos                
+            [sobrenome] => 35495984080
+            [email] => gustavo.santos@contato.com.br
+
+        )
+
+    [1] => Array
+        (
+            [nome] => Marcela Moreira               
+            [sobrenome] => 99422057051
+            [email] => marcela.moreira@contato.com.br
+
+        )
+
+    [2] => Array
+        (
+            [nome] => Carlos Silva                  
+            [sobrenome] => 00119677067
+            [email] => carlos.silva@contato.com.br
+
+        )
+
+    [3] => Array
+        (
+            [nome] => Rosana Marques                
+            [sobrenome] => 22079999044
+            [email] => rosana.marques@contato.com.br
+        )
+
+)
+```
+
+As informações estão sendo armazenadas corretamente dentro do atributo dados do objeto do arquivo que por sua vez ou não só é recuperado aqui no leitor e retornado para o Index e aí nós podemos fazer o seguinte podemos separar o nosso código falando que aqui nós temos o TXT e aqui abaixo o CSV para ajustar eu vou apenas renomear as nossas variáveis aqui. Então eu vou chamar aqui leitor TXT vou executar aqui a definição do diretório na sequência com o nome do arquivo para que a extensão é importante. No final vou recuperar essa informação aqui e aqui processe vou chamar a variável de leitor CSV. Vamos fazer o mesmo processo. A diferença é que aqui nós vamos definir o arquivo de dados ponto CSV e no final nós vamos executar ao lado do arquivo que agora está apontando para dados ponto CSV. Ou seja o nosso eterno já está lendo um arquivo txt no arquivo CSV Vamos testar aqui no navegador vou atualizar muito bem temos os dois arrays.
+
+*app_etl/index.php*
+
+```php
+<?php
+require __DIR__ . '/vendor/autoload.php';
+use AppEtl\Leitor;
+// ---------- TXT ----------
+$leitorTXT = new Leitor();
+$leitorTXT->setDiretorio(__DIR__ . '/arquivos');
+$leitorTXT->setArquivo('dados.txt');
+echo '<pre>';
+print_r($leitorTXT->lerArquivo());
+echo '<pre>';
+// ---------- CSV ----------
+$leitorCSV = new Leitor();
+$leitorCSV->setDiretorio(__DIR__ . '/arquivos');
+$leitorCSV->setArquivo('dados.csv');
+echo '<pre>';
+print_r($leitorCSV->lerArquivo());
+echo '<pre>';
+```
+
+Podemos mesclar os dados dos arquivos. Olha só voltando aqui eu vou recortar essa função. Esse método aliás vou colocar aqui muito bem vou recortar esse outro método vou colocá-lo aqui.
+
+```php
+// ---------- TXT ----------
+$leitorTXT = new Leitor();
+$leitorTXT->setDiretorio(__DIR__ . '/arquivos');
+$leitorTXT->setArquivo('dados.txt');
+$leitorTXT->lerArquivo();
+// ---------- CSV ----------
+$leitorCSV = new Leitor();
+$leitorCSV->setDiretorio(__DIR__ . '/arquivos');
+$leitorCSV->setArquivo('dados.csv');
+$leitorCSV->lerArquivo();
+```
+
+Vamos definindo o merge entre TXT e CSV. Criar uma variável chamada `arr_txt` que vai receber o retorno do método `$leitorTXT->lerArquivo();`. E criar uma outra variável `arr_csv` que vai recuperar o retorno `$leitorCSV->lerArquivo();`. Agorva vamos dar um `print_r`, utilizando o método `array_merge`, para juntar o `arr_txt` e com `arr_csv`. Para facilitar a leitura, é incluído `echo '<pre>';`
+
+```php
+// ---------- TXT ----------
+$leitorTXT = new Leitor();
+$leitorTXT->setDiretorio(__DIR__ . '/arquivos');
+$leitorTXT->setArquivo('dados.txt');
+$arr_txt = $leitorTXT->lerArquivo();
+// ---------- CSV ----------
+$leitorCSV = new Leitor();
+$leitorCSV->setDiretorio(__DIR__ . '/arquivos');
+$leitorCSV->setArquivo('dados.csv');
+$arr_csv = $leitorCSV->lerArquivo();
+// ---------- Merge entre TXT e CSV ----------
+echo '<pre>';
+print_r(array_merge($arr_txt, $arr_csv));
+echo '<pre>';
+```
+
+Retornando e atualizando o navegador, temos um único array com os dados do TXT e do CSV. Voltando ao código, um único detalhe que ficou faltando, é o seguinte que após abrir os arquivos, é uma boa prática fechá-los. Então, ao final de cada método `lerArquivoCSV` e `lerArquivoTXT`, vamos incluir `fclose($handle);`. Dessa forma nós vamos abrir e fechar os arquivos corretamente Muito bem então nessa aula nós implementamos esse segundo fluxo de leitura de arquivos txt. Porém nesse momento nós não estávamos nos preocupando com o Open/Closed Principle. Embora a nossa aplicação tenha ficado bastante funcional inclusive bastante reutilizável. Repare que nós temos métodos distintos que respeitam a questão da responsabilidade única esses métodos estão inseridos dentro de uma classe que manipula os arquivos. Nós estamos aqui com um leitor que diz como esses arquivos devem ser lidos. Então repare que por mais que a gente tenha a responsabilidade única nesse momento nós ainda não estamos aplicando os princípios de aberto e fechado mas porque nesse momento você ainda não foi apresentado a esses princípios. Na próxima aula eu vou falar um pouco sobre a teoria do Open/Closed Principle. Na sequência faturar o nosso projeto para entender quais são os benefícios propostos por esse princípio. Até a próxima aula.
+
 ## 20. Entendendo o Open/Closed Princple (OCP)
 
 ## 21. Refactoring do Projeto - Aplicando o Princípio na Prática
