@@ -2,7 +2,7 @@
     "name": "julia/app_etl",
     "autoload": {
         "psr-4": {
-            "Julia\\AppEtl\\": "src/"
+            "AppEtl\\": "src/"
         }
     },
     "authors": [
