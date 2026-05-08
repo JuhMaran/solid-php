@@ -46,4 +46,9 @@ class Arquivo
         }
         fclose($handle);
     }
+
+    public function lerArquivoXLSX(string $caminho): void
+    {
+        // Implemenar o código de leitura do arquivo XLSX
+    }
 }
