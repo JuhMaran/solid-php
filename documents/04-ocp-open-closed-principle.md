@@ -31,7 +31,7 @@ O nome significa:
 
 ### Fluxo do ETL
 
-```Mermaid
+```mermaid
 flowchart LR
     A[Arquivos CSV/TXT/API] --> B[Extract]
     B --> C[Transform]
@@ -71,7 +71,7 @@ Nesta aula o instrutor:
 
 ### Estrutura Inicial
 
-```Mermaid
+```mermaid
 flowchart TD
     A[Projeto ETL] --> B[src/]
     A --> C[arquivos/]
