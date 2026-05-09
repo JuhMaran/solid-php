@@ -1,6 +1,4 @@
-# DIP - Dependency Inversion Principle
-
-_Princípio da Inversão de Dependência_
+# DIP - Dependency Inversion Principle (Princípio da Inversão de Dependência)
 
 ## 33. Iniciando o Projeto Mensageiro
 

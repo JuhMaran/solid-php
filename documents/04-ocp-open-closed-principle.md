@@ -1,6 +1,4 @@
-# OCP - Open/Closed Principle
-
-_Princípio Aberto/Fechado_
+# OCP - Open/Closed Principle (Princípio Aberto/Fechado)
 
 ## Visão Geral
 

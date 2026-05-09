@@ -10,6 +10,12 @@ _Os 5 princípios para as boas práticas da POO com PHP_
 4. ISP - Interface Segregation Principle (Princípio da Segregação de Interface)
 5. DIP - Dependency Inversion Principle (Princípio da Inversão de Dependência)
 
+## Técnologias
+
+* PHP
+* Composer
+* Autoload PSR-4
+
 ## Executando a aplicação
 
 ### APP Carrinho Compras

@@ -1,6 +1,4 @@
-# ISP - Interface Segregation Principle
-
-_Princípio da Segregação de Interfaces_
+# Seção 6: ISP - Interface Segregation Principle (Princípio da Segregação de Interface)
 
 ## 28. Iniciando o Projeto CRM
 
