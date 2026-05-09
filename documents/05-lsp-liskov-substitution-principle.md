@@ -259,6 +259,54 @@ Do ponto de vista de abstração e implementação dos objetos dentro da nossa a
 
 ## 25. Projeto Polígonos - Testando a Substituição de Tipos
 
+O instrutor, inicialmente, enquanto explica compartilha a tela com o slide que possui as informações:
+
+Classe `Retangulo.php`
+
+* Atributos:
+  * `$altura`
+  * `$largura`
+* Métodos:
+  * `getAltura()`
+  * `setAltura()`
+  * `getLargura()`
+  * `setLargura()`
+  * `getArea()`
+
+Classe `Quadrado.php`
+
+* Quadrado herda de Retângulo.
+* Métodos sobrescritos (polimorfismo) - ou comportamentos
+  * `setAltura()`
+  * `setLargura()`
+
+Se **Quadrado é também um Retângulo**, então podemos utilizar o **Quadrado** no lugar do **Retângulo**! Ou será que não?
+
+* Explicação do slide:
+
+Nessa aula vamos entender o porquê da abastração e a implementação feitas na aula anterior. Embora esteja respetiando as regras de negócio, e esteja matematicamente correta. Segundo Liskov Substitution Principle não está programaticamente correta. Ou seja, a implementação feita embora funcional, não atende o aspecto das boas práticas. O instrutor, ainda irá falar sobre a parte a teoria do princípio LSP. O projeto polígonos, desenvolvido nesta seção facilitará o entendimento da parte teórica do princípio. Nesta aula, iremos simular o comportamento, cujo o princípio se propõe a evitar. E na próxima aula, iremos entrar na parte teórica, entender como um fundamento prático o que é esse princípio, como podemos contornar essa situação. O que seria portanto, as boas práticas propostas pelo SOLID em situações como essa. Agora, vamos focar no tema dessa aula. Vamos falar sobre a substituição de tipos. Repare que "se um quadrado é também um retângulo", isso significa que a qualquer momento dentro da nossa aplicação nós poderíamos utilizar o quadrado no lugar do retângulo. Então repare que essa afirmação também faz sentido do ponto de vista de abstração, já que um quadrado é um retângulo. Em tese não haveria diferença nenhuma utilizar o quadrado no lugar do retângulo. E aí fica um ponto de atenção se você se lembra bem. A especialização no quadrado consiste no polimorfismo de dois métodos, ou seja, de dois comportamentos. Basicamente falando nós alteramos os métodos `setAltura()` e `setLargura()` na classe `Quadrado.php` para que esses comportamentos atuassem de um modo diferente, em relação à classe pai, a classe `Retangulo.php` devido à necessidade do objeto quadrado. Você vai notar portanto que esse polimorfismo. Essa mudança de comportamento que nós implementamos na classe filha vai gerar problemas em relação a essa afirmação, de que um "quadrado é também um retângulo" no momento em que houver essa substituição de tipos.
+
+* Código no Visual Studio Code
+
+No arquivo `index.php`, vamos realizar o teste. A ideia é a seguinte: se um quadrado é um retângulo, então nós precisamos concordar que eu poderia criar dentro da nossa aplicação retângulos na classe quadrado (substituir `new Retangulo()` por `new Quadrado()`). Já que um quadrado é um retângulo. É necessário que faça sentido de modo programático. 
+
+```php
+$retangulo = new Quadrado();
+$retangulo->setAltura(5);
+$retangulo->setLargura(10);
+echo '<h3>LSP - Área do Retângulo: ' . $retangulo->getArea() . '</h3>';
+```
+
+Mas, será que faz mesmo sentindo? Se o nosso retângulo baseado no tipo quadrado tem a altura 5 e a largura 10, o resultado esperado, e correto, neste caso seria retornar `área = 50`. Mas vamos ver o que acontece. Resultado:
+
+```text
+Área do Retângulo: 50
+Área do Quadrado: 25
+LSP - Área do Retângulo: 100
+```
+
+Repare que ele retorna para nós `100`, por quê? Porque justamente pela sobrescrita dos métodos pelo polimorfismo que fizemos na classe filha, os `setAltura()` e `setLargura()`, trabalham de modos especializados para o quadrado. Então não consigo simplesmente substituir esses tipos. Repare que a minha afirmação é de que  "quadrado é um retângulo", embora esteja correta do ponto de vista de negócio e também do ponto de vista matemático, não está correto do ponto de vista programático. Ou seja, a abstração que fizemos na aula anterior desses objetos das suas relações embora tenham sido feitas em dois argumentos fortes, o matemático e o de negócio. Ainda assim, não está correto, porque nós precisamos tomar cuidado em relação a como esses dados existirão dentro das nossas aplicações. Portanto a partir de agora o conceito de abstração precisa se tornar mais refinado. Nós não vamos mais simplesmente observar os objetos no mundo real para trazer esses objetos para dentro das nossas aplicações nós vamos ter que ter também a habilidade de entender como esses tipos de objetos esses dados se comportam internamente dentro das nossas aplicações. O LSP vai nos ajudar nesse sentido. Ele propõe que tomamos bastante cuidado em relação à tipagem forte de comportamentos dos nossos objetos, mas não se preocupe com isso. Ainda na próxima nós vamos falar com mais detalhes sobre esse princípio então até lá.
+
 ## 26. Entendendo o Liskov Substitution Principle
 
 ## 27. Refactoring do Projeto - Aplicando o Princípio na Prática
