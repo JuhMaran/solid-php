@@ -1,200 +1,268 @@
 # Seção 6: ISP - Interface Segregation Principle (Princípio da Segregação de Interface)
 
-* Princípio SOLID:
-  * Interface Segregation Principle ou Princípio da Segregação de Interface ou ISP
-* Nome do projeto:
-  * `app_crm`
-* O projeto utiliza:
-  * Composer
-  * Autoload PSR-4
-  * Estrutura básica de aplicação orientada a objetos
+## Objetivo da Seção
 
-## 28. Iniciando o Projeto CRM
+Nesta seção do curso, o foco é compreender o quarto princípio do SOLID:
 
-Nesta aula, vamos criar o Projeto CRM. Antes de entrarmos na parte de teória e prática do princípio ISP, vamos iniciliar o projeto, o qual será utilizado para praticar esse princípio.
+* **ISP — Interface Segregation Principle**
+* Em português: **Princípio da Segregação de Interface**
 
-* Estrutura Inicial do Projeto:
+A ideia principal do ISP é:
+
+> “Clientes não devem ser forçados a depender de métodos que não utilizam.”
+
+No contexto da programação orientada a objetos:
+
+* “Clientes” = classes que implementam interfaces.
+* O problema acontece quando uma interface possui métodos demais, obrigando classes a implementarem comportamentos que elas não precisam.
+
+A seção utiliza um projeto CRM fictício chamado `app_crm` para demonstrar isso na prática.
+
+## Visão Geral do Projeto CRM
+
+O projeto foi criado apenas para exemplificar o ISP.
+
+Ele utiliza:
+
+* Composer
+* Autoload PSR-4
+* Estrutura orientada a objetos
+* Separação por responsabilidades
+
+Estrutura inicial:
 
 ```text
-solid/
-└── app_crm/
-    │
-    ├── src/
-    ├── vendor/
-    ├── composer.json
-    └── index.php
+app_crm/
+├── src/
+├── vendor/
+├── composer.json
+└── index.php
 ```
 
-Iniciar o projeto atráves do Composer: `php ../composer.phar init`
+## Aula 28 — Iniciando o Projeto CRM
 
-* Package name - teclar enter (pular)
-* Description - teclar enter (pular)
-* Author - teclar enter (pular)
-* Minium Stability - teclar enter (pular)
-* Package Type - teclar enter (pular)
-* License - teclar enter (pular)
-* Definição de dependências: no
-* Definição de desenvolvimento: no
-* Gerar arquivo: yes
-* Abrir o diretório na IDE Visual Studio Code
-* No arquivo composer.json, configurar o autoload com PSR-4
+### Objetivo da Aula 28
 
-**app_crm/composer.json**
+Preparar o ambiente do projeto antes de trabalhar o ISP.
 
-json
-{
-    "name": "julia/app_crm",
-    "autoload": {
-        "psr-4": {
-            "AppCrm\\": "src/"
-        }
-    },
-    "authors": [
-        {
-            "name": "JuhMaran",
-            "email": "julianemaran@gmail.com"
-        }
-    ],
-    "require": {}
+### Conceitos apresentados
+
+#### 1. Composer
+
+O Composer é o gerenciador de dependências do PHP.
+
+Ele é responsável por:
+
+* organizar dependências
+* gerar autoload
+* estruturar o projeto
+
+Comando usado:
+
+```bash
+php ../composer.phar init
+```
+
+#### 2. Autoload PSR-4
+
+O projeto utiliza o padrão PSR-4 para carregamento automático das classes.
+
+Configuração:
+
+```json
+"autoload": {
+  "psr-4": {
+    "AppCrm\\": "src/"
+  }
 }
+```
 
-* Instalação do Composer: `php ../composer.phar install`
+Isso significa:
 
-Após as configurações iniciais, vamos criar no diretório `app_crm/` o arquivo `index.php`. Adicionar o `require` do `autoload` do composer. E adicionar `echo` com a mensagem `'Teste ISP'` para verificar se está tudo OK.
+| Namespace | Diretório |
+| --------- | --------- |
+| `AppCrm\` | `src/`    |
+
+Exemplo:
 
 ```php
-<?php
+AppCrm\dao\ContratoModel
+```
 
+será procurado em:
+
+```text
+src/dao/ContratoModel.php
+```
+
+**Fluxo de funcionamento do autoload**
+
+```mermaid
+flowchart TD
+
+A[Classe é utilizada] --> B[Composer Autoload]
+B --> C[PSR-4 localiza namespace]
+C --> D[Classe carregada automaticamente]
+```
+
+#### 3. Arquivo index.php
+
+O arquivo inicial da aplicação carrega o autoload:
+
+```php
 require __DIR__ . '/vendor/autoload.php';
-
-echo 'Teste ISP';
 ```
 
-Na linha de comando, no diretório `app_crm`, executar o comando: `php -S localhost:8000`. E acessar o navegador e verificar no endereço `http://localhost:8000/` se retorna a mensagem. Retornou e está funcionando corretamente.
+Isso permite usar classes sem precisar de vários `require`.
+
+#### 4. Servidor embutido do PHP
+
+Comando:
+
+```bash
+php -S localhost:8000
+```
+
+Cria um servidor local para testar o projeto no navegador.
+
+## Aula 29 — Implementando os Componentes da Aplicação
+
+### Objetivo da Aula 29
+
+Criar a estrutura do CRM antes de aplicar o ISP.
+
+Nesta etapa:
+
+* ainda NÃO existe interface
+* o objetivo é preparar o cenário
+
+### Conceitos importantes
+
+#### 1. Componentes da aplicação
+
+Foram criadas classes representando entidades do sistema:
 
 ```text
-Teste ISP
+componentes/
+├── Contrato.php
+├── Lead.php
+├── Usuario.php
+├── Log.php
+└── Notificacao.php
 ```
 
-O projeto está iniciando. Até a próxima aula.
+Essas classes representam objetos do domínio.
 
-## 29. Projeto CRM - Implementando os Componentes da Aplicação
+Exemplo:
 
-![Projeto CRM - Implementando os Componentes da Aplicação](./../images/007_projeto_crm.png)
+| Classe      | Representa          |
+| ----------- | ------------------- |
+| Contrato    | contratos           |
+| Lead        | potenciais clientes |
+| Usuario     | usuários do sistema |
+| Log         | registros de ações  |
+| Notificacao | notificações        |
 
-**Explicação do Slide:** Nessa aula nós daremos continuidade ao desenvolvimento do projeto CRM. Nós vamos trabalhar na construção de alguns componentes da nossa aplicação que ainda não estão diretamente relacionados com o ISP Interface Segregation Principle. Ou seja, vamos apenas estruturar a nossa aplicação para que na próxima aula seja possível entendermos como podemos aplicar o ISP quando estamos trabalhando com interfaces. Nessa aula, portanto, nós não vamos implementar a interface, vamos apenas criar os componentes básicos para começar os nossos testes.
+#### 2. DAO — Data Access Object
 
-**No código:**
+Foi introduzido o conceito de DAO.
 
-* Criar o diretório `componentes` dentro do diretório `src/`.
-* No diretório `src/componentes/`, vamos criar os componentes:
-  * `Contrato.php`
-  * `Lead.php`
-  * `Usuario.php`
-  * `Log.php`
-  * `Notificacao.php`
-
-Arquivos criados, vamos apenas escrever as classes. Lembrando que não faremos a implementação do CRM em si. Vamos apenas criar alguns componentes e classes para inlustrar melhor o ISP.
-
-* Definir o `namespace` como sendo `AppCrm\componentes;`
-
-Vamos criar as classes:
-
-* ContratoModel
-* LeadModel
-* UsuarioModel
-
-Essas classes teriam como responsabilidade recuperar os respectivos objetos (Contrato, Lead e Usuario) e manipular esses objetos junto ao banco de dados. Ou seja, aqui teríamos uma interface DAO (Data Access Object), para manipular os objetos da nossa aplicação junto ao banco isolando a responsabilidade desses objetos.
-
-**Sugestão do instrutor:** pesquisar sobre DAO (Data Access Object) para complementar os estudos.
-
-Essas classes Model, vamos criar em outro diretório do projeto. Então, dentro de `src/`, vamos criar um diretório chamado `dao/` e dentro dele vamos criar:
-
-* `ContratoModel.php`
-* `LeadModel.php`
-* `UsuarioModel.php`
-
-Todas essas classes extenderão a classe BD (banco de dados) que ainda será criada. Vamos definir as classes dentro dos arquivos que nós criamos dentro do diretório `dao/`. Fechar todas as classes e facilitar o entendimento do que estamos fazendo. E dentro do diretório `src/`, vamos criar um script chamado `BD.php`. Essa classe deve ter:
-
-* Um atributo privado de conexão com o banco de dados: `private $conexao;`
-* Um método para estabelecer a conexão com o banco de dados: `conectar()`
-* Adicionar a lógica
-* Ao executar o método `conectar()` uma conexão com o banco de dados seria estabelecida
-* Essa conexão (resource) seria atribuído a variável `conexao` da classe `BD.php`
-* Adicionar o `namespace`
-
-Os nossos model podem extender a classe `BD.php` para herdar essa característica de conexão. Já que são as classes model que manipulam os respectivos objetos no banco de dados. Em cada um dos models vamos dar `use AppCrm\BD;` para extender essa classe. Adicionar nas classes `ContratoModel`, `LeadModel` e `UsuarioModel`. Feito isso nós já temos aqueles objetos pra começar a testar o ISP. Mas antes de começar a fazer esses testes antes de implementar a interface que vai ser o alvo de um entendimento a respeito do que é o ISP vamos apenas fazer alguns testes aqui na nossa aplicação. Agora que os modelos extenderam a classe DB, que por sua vez possui a lógica de conexão com o banco. No arquivo `index.php` vamos incluir o `use` de cada um dos modelos.
-
-```php
-use AppCrm\dao\ContratoModel;
-use AppCrm\dao\LeadModel;
-use AppCrm\dao\UsuarioModel;
-```
-
-Adicionar o atributo `$contratoModel` e verificar se está instanciando corretamente.
-
-```php
-$contratoModel = new ContratoModel();
-print_r($contratoModel);
-echo '<br>';
-
-// fazer o mesmo com LeadModel e UsuarioModel
-```
-
-Retorno via navegador:
+As classes:
 
 ```text
-AppCrm\dao\ContratoModel Object ( [conexao:AppCrm\BD:private] => )
-AppCrm\dao\LeadModel Object ( [conexao:AppCrm\BD:private] => )
-AppCrm\dao\UsuarioModel Object ( [conexao:AppCrm\BD:private] => )
+ContratoModel
+LeadModel
+UsuarioModel
 ```
 
-Os três objetos foram recuperados corretamente e estendem a classe BD, portanto herdam os atributos e métodos. Como dito anteriormente, nós montamos apenas os componentes da nossa aplicação, para começar a usar esses componentes desses objetos dentro de um contexo que faça sentindo a utilização de uma interface para nós estudarmos a fundo o ISP. Até a próxima aula.
+funcionam como camada de acesso ao banco.
 
-## 30. Projeto CRM - Implementando a Interface
+Responsabilidades:
 
-Na aula anterior nós trabalhamos na criação de diversas classes dentro do nosso projeto. Nessa aula nós vamos focar na criação da interface e cadastro e na implementação dessa interface nas classes ContratoModel, LeadModel e UsuarioModel. A ideia é que após a implementação dessa interface nessas classes seja possível entender claramente qual é a proposta do ISP. Ou seja, como que o Interface Segregation Principle sugere que trabalhamos com interfaces dentro dos nossos códigos. Ok. Bom um detalhe importante é que diferente das classes as interfaces elas não implementam os métodos elas apenas definem a assinatura daqueles respectivos métodos e as interfaces funcionam como uma espécie de contrato quando uma classe implementa uma determinada interface ela obrigatoriamente precisa implementar os métodos que foram definidos dentro dessa respectiva Interface. Então repare que a relação de uma classe para com uma interface é bem diferente da relação de herança. A herança é a especialização de um tipo, é quando pegamos uma determinada classe e estendemos essa classe especializando seus comportamentos. Já a interface é uma espécie de contrato que pode ser associada a várias classes de domínios distintos para que os respectivos métodos dessa interface obrigatoriamente sejam implementados dentro dessas classes. Bom vamos ao código. Eu tenho certeza que tudo isso ficará bem mais claro. Voltava aqui no nosso código dentro do diretório `src`. Vou criar um novo diretório chamado `interfaces/` e dentro deste diretório, vou criar um script de `ICadastro.php` que será nossa interface. Vou definir o `namespace AppCrm\interfaces;`, e para declarar vamos utilizar a palavra reservada `interface` seguida do nome `ICadastro {}`. A síntaxe é semelhante a de uma classe. Vamos determinar os métodos que as classes obrigatoriamente precisaram implementar. Dentro de uma interface todos os métodos são públicos, então teremos os métodos `salvar()`, `registrarLog(Log)` e `enviarNotificacao(Notificacao)`. Repare que nós apenas definimos aqui a assinatura do método. Nós não estamos implementando novamente a responsabilidade de implementação é da classe que implementar aquela respectiva interface. E ao retornar ao slide, podemos observar que nossa interface espera receber registrar Log, um objeto do tipo Log e para enviar notificação espera um objeto do tipo notificação. Essas classes Log.php e Notificacao.php foram criadas na aula anterior, que definem esses objetos. Então nós vamos importar aqui pra assinar os métodos como objetos desse tipo (`use AppCrm\componentes\Log;` e `use AppCrm\componentes\Notificacao;`). E na assinatura dos métodos, vamos tipar o parâmetro, espero receber uma variável (`$log`) do tipo `Log` e o mesmo para notificação (`enviarNotificacao(Notificacao $notificacao)`). Importamos as classes Log e Notificacao, portanto temos um tipo de dado que podemos utilizar para tipar o parâmetro, que desejamos receber em cada método. Então, estamos definindo um contrato dentro da nossa aplicação que determina que a classe que implementar essa interface, obrigatoriamente, precisa implementar esses três métodos. O próximo passo é implementar essa interface nas classes que receberão esses contratos. Iniciando pelo `ContratoModel.php`:
+* salvar dados
+* buscar registros
+* atualizar objetos
 
-```php
-<?php
-namespace AppCrm\dao;
-use AppCrm\BD;
-use AppCrm\interfaces\ICadastro;
-use AppCrm\componentes\Log;
-use AppCrm\componentes\Notificacao;
-class ContratoModel extends BD { }
+**Fluxo DAO**
+
+```mermaid
+flowchart LR
+
+A[Aplicação] --> B[Model DAO]
+B --> C[Banco de Dados]
 ```
 
-Essa interface então começando pelo contrato do módulo eu vou abrir por aqui só pra facilitar um pouco olha só as três classes que estamos falando que elas estão aqui. Vital então contrato modo para implementar essa interface bem simples basta dar um série C Barra interfaces se você se lembra bem nós definimos esse nome espécie aqui olha só criamos o diretório interfaces aqui dentro de SC. Então aqui basta utilizar uma interfaces com interfaces se não faz cadastro Ok pra implementar essa interface bem simples aquela só na classe. Nós estamos estendendo da classe BD, mas nada impede que ao mesmo tempo a gente faça a implementação da interface cadastro no momento em que isso é feito olha só o que acontece. Você sabe que eu ainda vou comentar com o nosso objeto que é o nosso objeto Usuário. Vou isolar aqui apenas o objeto do contrato e aí só pra testar.
+#### 3. Herança
+
+Os models herdam da classe `BD`.
 
 ```php
-<?php
-namespace AppCrm\dao;
-use AppCrm\BD;
-use AppCrm\interfaces\ICadastro;
-use AppCrm\componentes\Log;
-use AppCrm\componentes\Notificacao;
-class ContratoModel extends BD implements ICadastro { }
+class ContratoModel extends BD
 ```
 
-Vou alterar aqui no contrato vou fazer o seguinte vou tirar aqui temporariamente essa instrução vou salvar vou voltar aqui no browser vou atualizar está lá o nosso contrato está funcionando mas no instante em que a implementação da interface é feita olha só a linguagem na tela passa a obrigar a implementação dos métodos contidos nessa interface Então repare que o PHP diz pra gente que existem 3 métodos abstratos que foram declarados na interface mas não foram implementados na classe que faz uso da respectiva interface. Os métodos são salvar, registrar logs e enviar a notificação para resolver esse problema. Basta aqui na classe que implementa a interface e implementar os métodos. Então `public function salvar()`. E aqui nós teríamos uma lógica lembrando que eu não vou implementar a lógica ao longo desse projeto porque senão ficaria muito extenso. Então olha só. Ao fazer isso repare que ele não reclama mais tomado do salvar porque esse método foi implementado com o nosso próximo passo será implementar o método `registrarLog()`. Então voltar aqui no código. Vou copiar essas instruções, para facilitar. Legal. Observe que nós tivemos um erro aqui. Por quê. Porque o nosso método `registrarLog()` definindo na interface cadastro espera um parâmetro, um parâmetro do tipo `Log`. Portanto aqui no nosso código nós precisamos receber esse parâmetro e aí para manter o nosso código coerente vamos estipular o nosso parâmetro como sendo do tipo `Log` para fazer isso basta só importar a nossa classe `Log`, vou salvar, retornar ao browser e está lá. Repare que o erro mudou. Agora ele está reclamando de `enviarNotificacao()`. Então vamos implementar aqui o método `enviarNotificacao()`. Lembrando que a nossa interface está determinado que esse método recebe um parâmetro do tipo `Notificacao`. Então nós podemos fazer o mesmo aqui olha só bastando apenas importar a nossa classe `Notificacao` para que seja possível 'tipar' o parâmetro dessa forma. Tudo salvo. Vou voltar aqui no browser, vou atualizar tá lá. A classe `ContratoModel` voltou a funcionar normalmente porque ela implementou a interface. Nós adicionamos a interface a essa classe e implementamos os seus respectivos métodos. Mas repare que no caso da classe `ContratoModel` nós precisaríamos apenas do método `salvar()`, mas nós fomos obrigados a implementar também os métodos `registrarLog` e `enviarNotificacao`. Repare que esses dois métodos aqui eles não seriam necessários para a nossa classe `ContratoModel`, mas devido a característica de interface nós fomos obrigados a implementar esses métodos aqui também. E aí voltando no arquivo `index.php`, vou remover os comentários de `leadModel` e `usuarioModel`. Na classe `leadModel`, faremos a memsa coisa, importar a interface, importar os tipos e implementar os métodos. Lembrando que aqui neste modelo a lógica mantida dentro dos métodos poderiam ser bem diferentes da lógica contida nos métodos aqui da classe `ContratoModel` porque a interface não se preocupa com a implementação em si, apenas com a implementação de um método usando uma determinada assinatura. Então aqui repare que para `LeadModel` nós também seremos obrigados a implementar os três médicos definidos na interface.  Isso é uma regra, mas se observarmos aqui as nossas necessidades de negócio nós precisaríamos apenas dos métodos de `salvar()` e `enviarNotificacao()`. Para `LeadModel` o método `registrarLog()` precisa ser implementado de algum modo porque a interface obriga mais, a classe não necessariamente precisa desse método. Já para o `UsuarioModel` nós vamos implementar os três métodos da interface. Estávamos lá para facilitar vou copiar aqui de `LeadModel`, mesma coisa, tudo salvo se voltarmos aqui no browser e atualizar nos a página olha só a nossa aplicação está funcionando normalmente e as três classes `ContratoModel`, `LeadModel` e `UsuarioModel` estão implementando a interface `ICadastro` e portanto implementando os três métodos definidos dentro dessa interface. Como eu comentei nem todas as classes utilizam todos os métodos que são definidos na interface, mas por ser uma interface obrigatoriamente essas classes estão obrigadas a implementar esses métodos. E é justamente aqui que o ISP traz para nós uma recomendação importante que nós veremos na próxima aula. Até a próxima aula;
+A ideia é reutilizar a lógica de conexão.
 
-## 31. Entendendo a Interface Segregation Principle
+### Classe BD
 
-Nessa aula eu vou falar sobre o quarto princípio SOLID, Interface Segregation Principle ou Princípio da Segregação de Interface ou ISP. O princípio diz que **Clientes NÃO devem ser forçados a depender de métodos que NÃO usam**. Nesse caso os clientes em questão são as classes quando uma interface é implementada em uma classe. Se você se lembra bem a classe obrigatoriamente precisa implementar todos os métodos da interface. Porém segundo o ISP é nesse ponto que precisamos ficar atentos, se a implementação dos métodos de fato faz sentido na classe. Em resumo se os métodos implementados não forem utilizados pelo objeto o que será responsável a partir da classe. Então não faz sentido implementar esses métodos. Repare que essa conclusão ela é bastante razoável, concorda? Na prática isso significa que **muitas interfaces específicas são melhores do que uma única interface**. A palavra de ordem nesse caso **baixo acoplamento** e **alta coesão** justamente para que as classes clientes não sejam forçadas a implementar métodos que não serão utilizados. Se observarmos o nosso projeto CRM que desenvolvemos em aulas anteriores podemos enxergar exatamente com o princípio ISP ferido se você se lembra bem no projeto. Nós criamos uma interface com três métodos e essa interface foi implementada em três classes distintas na `ContratoModel`, `LeadModel` e `UsuarioModel`. No instante em que a interface `ICadastro` foi implementada nessas classes as classes obrigatoriamente precisaram implementar os três métodos definidos nessa interface. Repare que isso foi obrigatório. Mesmo sabendo que algumas das classes não implementaram todos os métodos da interface. Então repare que aqui nós criamos dentro do nosso projeto uma situação que fere o ISP, porque existem clientes/classes que implementam interfaces que são forçadas a implementar os seus respectivos métodos sem que esses métodos sejam de fato utilizados. Na próxima aula nós vamos trabalhar fazendo um refactoring no nosso projeto segregando a interface, ou seja, separando as funcionalidades dessa interface definindo interfaces específicas para atendermos ao princípio ISP do SOLID, então até a próxima aula.
-
-## 32. Refactoring do Projeto - Aplicando o Princípio na Prática
-
-Muito bem nessa aula o nosso objetivo é bem simples. Nós vamos apenas segregar a interface `ICadastro` em outras interfaces para atender ao Interface Segregation Principle. Então voltando aqui no nosso código eu fechei todos os scripts para facilitar um pouco o andamento da aula e nós vamos começar abrindo aqui olha só o script `ICadastro` contido lá dentro do diretório `app_crm/src/interfaces/` aqui está na nossa interface com os três métodos.
+Responsável pela conexão com banco:
 
 ```php
-<?php
+class BD {
+    private $conexao;
 
-namespace AppCrm\interfaces;
+    public function conectar() {
+        // lógica
+    }
+}
+```
 
-use AppCrm\componentes\Log;
-use AppCrm\componentes\Notificacao;
+### Conceito importante: Herança
 
+Herança representa:
+
+> especialização de comportamento
+
+Os models passam a herdar:
+
+* atributos
+* métodos
+* lógica de conexão
+
+#### Diagrama da herança
+
+```mermaid
+classDiagram
+
+class BD {
+  -conexao
+  +conectar()
+}
+
+class ContratoModel
+class LeadModel
+class UsuarioModel
+
+BD <|-- ContratoModel
+BD <|-- LeadModel
+BD <|-- UsuarioModel
+```
+
+## Aula 30 — Implementando a Interface
+
+Agora começa o foco real do ISP.
+
+### O que é uma Interface?
+
+Uma interface é um contrato.
+
+Ela define:
+
+* O QUE deve existir
+* NÃO COMO implementar
+
+#### Interface criada
+
+```php
 interface ICadastro {
     public function salvar();
     public function registrarLog(Log $log);
@@ -202,263 +270,392 @@ interface ICadastro {
 }
 ```
 
-O que nós vamos fazer aqui e criar duas novas interfaces `ILog.php` e `INotificacao.php`. Vou pegar o conteúdo do `ICadastro.php`, copiar e colar nas interfaces `ILog.php` e `INotificacao.php`. E vamos apenas ajustar, na interface `ILog.php`, vamos manter apenas o método `registrarLog()`, o mesmo para `INotificacao`, vamos manter apenas o método `enviarNotificacao()`, e por fim na interface `ICadastro.php`, vamos mater apenas o método `salvar()` e remover os importes. Agora nós temos aqui interfaces segregadas atendendo ao ISP. Por quê? Porque agora as nossas classes clientes elas vão implementar somente interfaces cujos os métodos serão utilizados. Não haverá mais portanto a necessidade de implementar métodos dentro das classes por obrigação da interface que não sejam utilizados pelos seus respectivos objetos. Então voltando aqui no código vamos começar pela `ContratoModel`, olha só, aqui em `ContratoModel` a nossa necessidade nesse momento é apenas `salvar()`. Então aqui nós vamos continuar a implementar uma interface cadastro, não existe mais a necessidade de importar aqui as classes `Log` e `Notificacao` porque não existe mais a necessidade de implementar esses métodos apenas um método `salvar()` definindo aqui na interface.
+### Conceitos fundamentais
+
+#### 1. Contrato
+
+Quando uma classe implementa uma interface:
 
 ```php
-<?php
-namespace AppCrm\dao;
-use AppCrm\BD;
-use AppCrm\interfaces\ICadastro;
-class ContratoModel extends BD implements ICadastro {
-    public function salvar() {
-        // Lógica para salvar o contrato no banco de dados
-    }
-}
+class ContratoModel implements ICadastro
 ```
 
-Já na classe `LeadModel` nós precisamos implementar tanto o método `salvar()` da interface `ICadastro` quanto o método `enviarNotificacao()` da interface e `INotificacao` então aqui no caso de interfaces diferente da herança. Nós podemos ter interfaces múltiplas implementadas dentro de uma mesma classe herança. A herança é permitida somente para a extensão de uma única classe, mas as interfaces nós podemos implementar tantas quantas forem necessárias tal que nós vamos implementar o `ICadastro` e `INotificacao`. Não precisamos aqui do `Log`. E aí para implementar tanto ca`ICadastro` quanto `INotificacao` basta aqui no final incluir uma vírgula e adicionar aqui a interface. Se houvessem outras aqui nós poderíamos passar aqui através do uso da vírgula. Tanto as interfaces quanto são necessárias. Bacana nesse caso estamos adicionando duas interfaces implementando seus respectivos métodos. Nós podemos portanto retirar o método `registrarLog()` que não é mais necessário.
+ela é obrigada a implementar TODOS os métodos.
 
-```php
-<?php
-namespace AppCrm\dao;
-use AppCrm\BD;
-use AppCrm\interfaces\ICadastro;
-use AppCrm\interfaces\INotificacao;
-use AppCrm\componentes\Notificacao;
-class LeadModel extends BD implements ICadastro, INotificacao {
-    public function salvar() {
-        // Lógica para salvar o contrato no banco de dados
-    }
-    public function enviarNotificacao(Notificacao $notificacao) {
-        // Lógica para enviar uma notificação relacionada ao contrato
-    }
-}
+**Fluxo da interface**
+
+```mermaid
+flowchart TD
+
+A[Interface ICadastro]
+--> B[salvar]
+
+A --> C[registrarLog]
+
+A --> D[enviarNotificacao]
 ```
 
-Já na classe `UsuarioModel` nós vamos implementar todos os métodos de todas as interfaces então aqui um `UsuarioModel` basta importar a interface log e notificação e passá la na instrução de implementação da classe.
+#### 2. Diferença entre Herança e Interface
 
-```php
-<?php
-namespace AppCrm\dao;
-use AppCrm\BD;
-use AppCrm\interfaces\ICadastro;
-use AppCrm\interfaces\ILog;
-use AppCrm\interfaces\INotificacao;
-use AppCrm\componentes\Log;
-use AppCrm\componentes\Notificacao;
-class UsuarioModel extends BD implements ICadastro, ILog, INotificacao {
-    public function salvar() {
-        // Lógica para salvar o contrato no banco de dados
-    }
-    public function registrarLog(Log $log) {
-        // Lógica para registrar o log do contrato
-    }
-    public function enviarNotificacao(Notificacao $notificacao) {
-        // Lógica para enviar uma notificação relacionada ao contrato
-    }
-}
-```
+**Herança**
 
-Tudo salvo se eu voltar aqui no browser e atualizar. Olha só a nossa aplicação continua funcionando normalmente. Se por acaso eu não implementar um método de uma determinada interface que está sendo implementada por uma classe nós teríamos com ele. Ok então é dessa forma que nós podemos segregar as interfaces dentro das nossas aplicações sempre pensando que é muito mais interessante do ponto de vista de boas práticas ter diversas interfaces do que apenas uma única interface. Sempre respeitando as classes garantindo que as classes implementem somente aquilo que será de fato necessário. Sempre pensando no **baixo acoplamento de código**, ou seja, **responsabilidades específicas** e uma **alta coesão** ou seja a utilização desses componentes específicos nos locais corretos de modo correto e coerente bom nós ainda temos muitos desafios pela frente. Então até a próxima aula.
+Representa:
 
-## Estrutura Final
+> “é um tipo de”
+
+Exemplo:
 
 ```text
-solid/
-└── app_crm/
-    ├── src/
-    │   ├── componentes/
-    │   │   ├── Contrato.php
-    │   │   ├── Lead.php
-    │   │   ├── Log.php
-    │   │   ├── Notificacao.php
-    │   │   └── Usuario.php        
-    │   ├── dao/    
-    │   │   ├── ContratoModel.php
-    │   │   ├── LeadModel.php
-    │   │   └── UsuarioModel.php
-    │   ├── interfaces/
-    │   │   ├── ICadastro.php
-    │   │   ├── ILog.php    
-    │   │   └── INotificacao.php    
-    │   └── BD.php
-    ├── vendor/
-    ├── composer.json
-    └── index.php
+ContratoModel é um BD
 ```
 
-## Código Final Implementado
+---
 
-* Antes da refatoração - `interfaces/ICadastro.php`
+**Interface**
+
+Representa:
+
+> “é capaz de fazer”
+
+Exemplo:
+
+```text
+LeadModel é capaz de salvar
+LeadModel é capaz de notificar
+```
+
+**Comparação visual**
+
+```mermaid
+flowchart LR
+
+A[Herança]
+--> B[Reutilização de comportamento]
+
+C[Interface]
+--> D[Contrato de comportamento]
+```
+
+#### 3. Obrigatoriedade de implementação
+
+Quando a interface foi implementada:
 
 ```php
-<?php
-namespace AppCrm\interfaces;
-use AppCrm\componentes\Log;
-use AppCrm\componentes\Notificacao;
+class ContratoModel extends BD implements ICadastro
+```
+
+o PHP passou a exigir:
+
+* salvar()
+* registrarLog()
+* enviarNotificacao()
+
+Caso contrário:
+
+* erro fatal
+
+### O Problema Encontrado
+
+Aqui surge o problema central da seção.
+
+#### ContratoModel realmente precisava de:
+
+```php
+salvar()
+```
+
+Mas foi obrigada a implementar também:
+
+```php
+registrarLog()
+enviarNotificacao()
+```
+
+mesmo sem utilizar esses métodos.
+
+### O mesmo aconteceu com LeadModel
+
+Ela precisava:
+
+```php
+salvar()
+enviarNotificacao()
+```
+
+Mas foi obrigada a implementar:
+
+```php
+registrarLog()
+```
+
+desnecessariamente.
+
+### Diagrama do problema
+
+```mermaid
+flowchart TD
+
+A[ICadastro]
+--> B[salvar]
+
+A --> C[registrarLog]
+
+A --> D[enviarNotificacao]
+
+B --> E[ContratoModel]
+C --> E
+D --> E
+
+B --> F[LeadModel]
+C --> F
+D --> F
+```
+
+Observe:
+
+* métodos inúteis foram impostos às classes
+
+Isso viola o ISP.
+
+## Aula 31 — Entendendo o ISP
+
+Agora o curso entra na teoria formal.
+
+### Definição oficial do ISP
+
+> Clientes não devem ser forçados a depender de métodos que não usam.
+
+### Significado prático
+
+Interfaces muito grandes causam:
+
+* acoplamento desnecessário
+* código inchado
+* baixa coesão
+* implementações inúteis
+
+### Conceitos fundamentais da aula
+
+#### 1. Baixo Acoplamento
+
+Baixo acoplamento significa:
+
+> menos dependências desnecessárias
+
+Quanto menos uma classe depender de coisas inúteis:
+
+* mais flexível ela será
+* mais fácil será modificar o sistema
+
+#### 2. Alta Coesão
+
+Alta coesão significa:
+
+> cada componente faz apenas o que realmente pertence à sua responsabilidade
+
+### Comparação
+
+| Problema          | Solução ISP                |
+| ----------------- | -------------------------- |
+| Interface gigante | Interfaces específicas     |
+| Métodos inúteis   | Apenas métodos necessários |
+| Alto acoplamento  | Baixo acoplamento          |
+| Baixa coesão      | Alta coesão                |
+
+## Aula 32 — Refatorando e Aplicando o ISP
+
+Agora ocorre a correção da arquitetura.
+
+### Estratégia utilizada
+
+A interface grande:
+
+```php
+ICadastro
+```
+
+foi dividida em interfaces menores.
+
+### Novas interfaces
+
+#### ICadastro
+
+Responsável apenas por salvar:
+
+```php
 interface ICadastro {
     public function salvar();
-    public function registrarLog(Log $log);
-    public function enviarNotificacao(Notificacao $notificacao);
 }
 ```
 
-* Depois da refatoração - `interfaces/ICadastro.php`
+#### ILog
+
+Responsável apenas por log:
 
 ```php
-<?php
-namespace AppCrm\interfaces;
-interface ICadastro {
-    public function salvar();
-}
-```
-
-* `interfaces/ILog.php`
-
-```php
-<?php
-
-namespace AppCrm\interfaces;
-use AppCrm\componentes\Log;
 interface ILog {
     public function registrarLog(Log $log);
 }
-
 ```
 
-* `interfaces/INotificacao.php`
+#### INotificacao
+
+Responsável apenas por notificações:
 
 ```php
-<?php
-namespace AppCrm\interfaces;
-use AppCrm\componentes\Notificacao;
 interface INotificacao {
     public function enviarNotificacao(Notificacao $notificacao);
 }
 ```
 
-* `componentes/Contrato.php`
+### Resultado Arquitetural
+
+#### Antes
+
+Uma interface gigante:
+
+```mermaid
+flowchart TD
+
+A[ICadastro]
+--> B[salvar]
+A --> C[registrarLog]
+A --> D[enviarNotificacao]
+```
+
+#### Depois
+
+Interfaces pequenas e específicas:
+
+```mermaid
+flowchart TD
+
+A[ICadastro]
+--> B[salvar]
+
+C[ILog]
+--> D[registrarLog]
+
+E[INotificacao]
+--> F[enviarNotificacao]
+```
+
+---
+
+### Aplicação nas classes
+
+#### ContratoModel
+
+Precisa apenas salvar:
 
 ```php
-<?php
-namespace AppCrm\componentes;
-class Contrato {}
+implements ICadastro
 ```
 
-* `componentes/Lead.php`
+#### LeadModel
+
+Precisa:
+
+* salvar
+* notificar
 
 ```php
-<?php
-namespace AppCrm\componentes;
-class Lead {}
+implements ICadastro, INotificacao
 ```
 
-* `componentes/Log.php`
+#### UsuarioModel
+
+Precisa:
+
+* salvar
+* registrar log
+* notificar
 
 ```php
-<?php
-namespace AppCrm\componentes;
-class Log {}
+implements ICadastro, ILog, INotificacao
 ```
 
-* `componentes/Notificacao.php`
+## Resultado Final
 
-```php
-<?php
-namespace AppCrm\componentes;
-class Notificacao {}
+### Antes da refatoração
+
+```mermaid
+flowchart TD
+
+A[Interface gigante]
+--> B[Classes obrigadas]
 ```
 
-* `componentes/Usuario.php`
+### Depois da refatoração
 
-```php
-<?php
-namespace AppCrm\componentes;
-class Usuario {}
+```mermaid
+flowchart TD
+
+A[Interfaces pequenas]
+--> B[Classes usam apenas o necessário]
 ```
 
-* Antes da refatoração - `dao/ContratoModel.php`
+## Principal Aprendizado da Seção
 
-```php
-<?php
-namespace AppCrm\dao;
-use AppCrm\BD;
-class ContratoModel extends BD {}
+### O ISP ensina que
+
+Interfaces devem ser:
+
+* pequenas
+* específicas
+* coesas
+* focadas em responsabilidades únicas
+
+## Benefícios obtidos
+
+### 1. Menor acoplamento
+
+As classes dependem apenas do necessário.
+
+### 2. Maior organização
+
+Cada interface possui responsabilidade clara.
+
+### 3. Melhor manutenção
+
+Alterações afetam menos partes do sistema.
+
+### 4. Melhor reutilização
+
+Interfaces pequenas são mais reutilizáveis.
+
+## Resumo Final da Seção
+
+### Problema inicial
+
+Uma única interface:
+
+```text
+ICadastro
 ```
 
-* Antes da refatoração - `dao/LeadModel.php`
+obrigava classes a implementar métodos inúteis.
 
-```php
-<?php
-namespace AppCrm\dao;
-use AppCrm\BD;
-class LeadModel extends BD {}
-```
+### Solução ISP
 
-* Antes da refatoração - `dao/UsuarioModel.php`
+Separar em interfaces menores:
 
-```php
-<?php
-namespace AppCrm\dao;
-use AppCrm\BD;
-class UsuarioModel extends BD {}
-```
+* ICadastro
+* ILog
+* INotificacao
 
-* `BD.php`
+## Ideia Central do ISP
 
-```php
-<?php
-namespace AppCrm;
-class BD {
-    private $conexao;
-    public function conectar() {
-      // add lógica
-    }
-}
-```
+> “Nenhuma classe deve ser obrigada a implementar comportamentos que não utiliza.”
 
-* `index.php`
+## Conclusão conceitual
 
-```php
-<?php
+O ISP promove:
 
-require __DIR__ . '/vendor/autoload.php';
+* baixo acoplamento
+* alta coesão
+* especialização de responsabilidades
+* código mais limpo
+* arquitetura mais flexível
 
-use AppCrm\dao\ContratoModel;
-use AppCrm\dao\LeadModel;
-use AppCrm\dao\UsuarioModel;
-
-$contratoModel = new ContratoModel();
-print_r($contratoModel);
-echo '<br>';
-
-$leadModel = new LeadModel();
-print_r($leadModel);
-echo '<br>';
-
-$usuarioModel = new UsuarioModel();
-print_r($usuarioModel);
-echo '<br>';
-
-// echo 'Teste ISP';
-```
-
-* composer.json
-
-```json
-{
-    "name": "julia/app_crm",
-    "autoload": {
-        "psr-4": {
-            "AppCrm\\": "src/"
-        }
-    },
-    "authors": [
-        {
-            "name": "JuhMaran",
-            "email": "julianemaran@gmail.com"
-        }
-    ],
-    "require": {}
-}
-```
+Ele trabalha diretamente na qualidade do design orientado a objetos.
