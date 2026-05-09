@@ -226,9 +226,9 @@ A área do quadrado passa a funcionar corretamente.
 
 Mas um problema conceitual foi introduzido.
 
-## Aula 25
+## Aula 25 - Projeto Polígonos — Testando a Substituição de Tipos
 
-## Objetivo da Aula 25
+### Objetivo da Aula 25
 
 Demonstrar na prática a violação do LSP.
 
@@ -331,7 +331,7 @@ Também depende:
 * previsibilidade
 * consistência
 
-## Aula 26
+## Aula 26 - Entendendo o Liskov Substitution Principle
 
 ### Origem do LSP
 
@@ -417,7 +417,7 @@ Retangulo
 
 Porque o Quadrado muda regras fundamentais do Retângulo.
 
-## Aula 27
+## Aula 27 - Refactoring do Projeto — Aplicando o LSP
 
 ### Objetivo da Aula 27
 
