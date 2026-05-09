@@ -1,6 +1,6 @@
 <?php
 
-namespace AppPoligonos;
+namespace AppPoligonos\poligonos;
 
 // Classe Retângulo é a classe pai, ou seja, a classe base. 
 class Retangulo
@@ -29,11 +29,5 @@ class Retangulo
     public function setAltura(float $altura): void
     {
         $this->altura = $altura;
-    }
-
-    // Método para calcular a área
-    public function getArea(): float
-    {
-        return $this->largura * $this->altura;
     }
 }
