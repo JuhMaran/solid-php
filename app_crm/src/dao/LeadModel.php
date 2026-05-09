@@ -4,19 +4,14 @@ namespace AppCrm\dao;
 
 use AppCrm\BD;
 use AppCrm\interfaces\ICadastro;
-use AppCrm\componentes\Log;
+use AppCrm\interfaces\INotificacao;
 use AppCrm\componentes\Notificacao;
 
-class LeadModel extends BD implements ICadastro
+class LeadModel extends BD implements ICadastro, INotificacao
 {
     public function salvar()
     {
         // Lógica para salvar o contrato no banco de dados
-    }
-
-    public function registrarLog(Log $log)
-    {
-        // Lógica para registrar o log do contrato
     }
 
     public function enviarNotificacao(Notificacao $notificacao)

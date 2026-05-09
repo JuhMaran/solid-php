@@ -4,10 +4,12 @@ namespace AppCrm\dao;
 
 use AppCrm\BD;
 use AppCrm\interfaces\ICadastro;
+use AppCrm\interfaces\ILog;
+use AppCrm\interfaces\INotificacao;
 use AppCrm\componentes\Log;
 use AppCrm\componentes\Notificacao;
 
-class UsuarioModel extends BD implements ICadastro
+class UsuarioModel extends BD implements ICadastro, ILog, INotificacao
 {
 
     public function salvar()

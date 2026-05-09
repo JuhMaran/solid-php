@@ -185,7 +185,81 @@ Nessa aula eu vou falar sobre o quarto princípio SOLID, Interface Segregation P
 
 ## 32. Refactoring do Projeto - Aplicando o Princípio na Prática
 
+Muito bem nessa aula o nosso objetivo é bem simples. Nós vamos apenas segregar a interface `ICadastro` em outras interfaces para atender ao Interface Segregation Principle. Então voltando aqui no nosso código eu fechei todos os scripts para facilitar um pouco o andamento da aula e nós vamos começar abrindo aqui olha só o script `ICadastro` contido lá dentro do diretório `app_crm/src/interfaces/` aqui está na nossa interface com os três métodos.
 
+```php
+<?php
+
+namespace AppCrm\interfaces;
+
+use AppCrm\componentes\Log;
+use AppCrm\componentes\Notificacao;
+
+interface ICadastro {
+    public function salvar();
+    public function registrarLog(Log $log);
+    public function enviarNotificacao(Notificacao $notificacao);
+}
+```
+
+O que nós vamos fazer aqui e criar duas novas interfaces `ILog.php` e `INotificacao.php`. Vou pegar o conteúdo do `ICadastro.php`, copiar e colar nas interfaces `ILog.php` e `INotificacao.php`. E vamos apenas ajustar, na interface `ILog.php`, vamos manter apenas o método `registrarLog()`, o mesmo para `INotificacao`, vamos manter apenas o método `enviarNotificacao()`, e por fim na interface `ICadastro.php`, vamos mater apenas o método `salvar()` e remover os importes. Agora nós temos aqui interfaces segregadas atendendo ao ISP. Por quê? Porque agora as nossas classes clientes elas vão implementar somente interfaces cujos os métodos serão utilizados. Não haverá mais portanto a necessidade de implementar métodos dentro das classes por obrigação da interface que não sejam utilizados pelos seus respectivos objetos. Então voltando aqui no código vamos começar pela `ContratoModel`, olha só, aqui em `ContratoModel` a nossa necessidade nesse momento é apenas `salvar()`. Então aqui nós vamos continuar a implementar uma interface cadastro, não existe mais a necessidade de importar aqui as classes `Log` e `Notificacao` porque não existe mais a necessidade de implementar esses métodos apenas um método `salvar()` definindo aqui na interface.
+
+```php
+<?php
+namespace AppCrm\dao;
+use AppCrm\BD;
+use AppCrm\interfaces\ICadastro;
+class ContratoModel extends BD implements ICadastro {
+    public function salvar() {
+        // Lógica para salvar o contrato no banco de dados
+    }
+}
+```
+
+Já na classe `LeadModel` nós precisamos implementar tanto o método `salvar()` da interface `ICadastro` quanto o método `enviarNotificacao()` da interface e `INotificacao` então aqui no caso de interfaces diferente da herança. Nós podemos ter interfaces múltiplas implementadas dentro de uma mesma classe herança. A herança é permitida somente para a extensão de uma única classe, mas as interfaces nós podemos implementar tantas quantas forem necessárias tal que nós vamos implementar o `ICadastro` e `INotificacao`. Não precisamos aqui do `Log`. E aí para implementar tanto ca`ICadastro` quanto `INotificacao` basta aqui no final incluir uma vírgula e adicionar aqui a interface. Se houvessem outras aqui nós poderíamos passar aqui através do uso da vírgula. Tanto as interfaces quanto são necessárias. Bacana nesse caso estamos adicionando duas interfaces implementando seus respectivos métodos. Nós podemos portanto retirar o método `registrarLog()` que não é mais necessário.
+
+```php
+<?php
+namespace AppCrm\dao;
+use AppCrm\BD;
+use AppCrm\interfaces\ICadastro;
+use AppCrm\interfaces\INotificacao;
+use AppCrm\componentes\Notificacao;
+class LeadModel extends BD implements ICadastro, INotificacao {
+    public function salvar() {
+        // Lógica para salvar o contrato no banco de dados
+    }
+    public function enviarNotificacao(Notificacao $notificacao) {
+        // Lógica para enviar uma notificação relacionada ao contrato
+    }
+}
+```
+
+Já na classe `UsuarioModel` nós vamos implementar todos os métodos de todas as interfaces então aqui um `UsuarioModel` basta importar a interface log e notificação e passá la na instrução de implementação da classe.
+
+```php
+<?php
+namespace AppCrm\dao;
+use AppCrm\BD;
+use AppCrm\interfaces\ICadastro;
+use AppCrm\interfaces\ILog;
+use AppCrm\interfaces\INotificacao;
+use AppCrm\componentes\Log;
+use AppCrm\componentes\Notificacao;
+class UsuarioModel extends BD implements ICadastro, ILog, INotificacao {
+    public function salvar() {
+        // Lógica para salvar o contrato no banco de dados
+    }
+    public function registrarLog(Log $log) {
+        // Lógica para registrar o log do contrato
+    }
+    public function enviarNotificacao(Notificacao $notificacao) {
+        // Lógica para enviar uma notificação relacionada ao contrato
+    }
+}
+```
+
+Tudo salvo se eu voltar aqui no browser e atualizar. Olha só a nossa aplicação continua funcionando normalmente. Se por acaso eu não implementar um método de uma determinada interface que está sendo implementada por uma classe nós teríamos com ele. Ok então é dessa forma que nós podemos segregar as interfaces dentro das nossas aplicações sempre pensando que é muito mais interessante do ponto de vista de boas práticas ter diversas interfaces do que apenas uma única interface. Sempre respeitando as classes garantindo que as classes implementem somente aquilo que será de fato necessário. Sempre pensando no **baixo acoplamento de código**, ou seja, **responsabilidades específicas** e uma **alta coesão** ou seja a utilização desses componentes específicos nos locais corretos de modo correto e coerente bom nós ainda temos muitos desafios pela frente. Então até a próxima aula.
 
 ## Estrutura Final
 
@@ -204,7 +278,9 @@ solid/
     │   │   ├── LeadModel.php
     │   │   └── UsuarioModel.php
     │   ├── interfaces/
-    │   │   └── ICadastro.php    
+    │   │   ├── ICadastro.php
+    │   │   ├── ILog.php    
+    │   │   └── INotificacao.php    
     │   └── BD.php
     ├── vendor/
     ├── composer.json
@@ -212,6 +288,54 @@ solid/
 ```
 
 ## Código Final Implementado
+
+* Antes da refatoração - `interfaces/ICadastro.php`
+
+```php
+<?php
+namespace AppCrm\interfaces;
+use AppCrm\componentes\Log;
+use AppCrm\componentes\Notificacao;
+interface ICadastro {
+    public function salvar();
+    public function registrarLog(Log $log);
+    public function enviarNotificacao(Notificacao $notificacao);
+}
+```
+
+* Depois da refatoração - `interfaces/ICadastro.php`
+
+```php
+<?php
+namespace AppCrm\interfaces;
+interface ICadastro {
+    public function salvar();
+}
+```
+
+* `interfaces/ILog.php`
+
+```php
+<?php
+
+namespace AppCrm\interfaces;
+use AppCrm\componentes\Log;
+interface ILog {
+    public function registrarLog(Log $log);
+}
+
+```
+
+* `interfaces/INotificacao.php`
+
+```php
+<?php
+namespace AppCrm\interfaces;
+use AppCrm\componentes\Notificacao;
+interface INotificacao {
+    public function enviarNotificacao(Notificacao $notificacao);
+}
+```
 
 * `componentes/Contrato.php`
 
@@ -253,7 +377,7 @@ namespace AppCrm\componentes;
 class Usuario {}
 ```
 
-* `dao/ContratoModel.php`
+* Antes da refatoração - `dao/ContratoModel.php`
 
 ```php
 <?php
@@ -262,7 +386,7 @@ use AppCrm\BD;
 class ContratoModel extends BD {}
 ```
 
-* `dao/LeadModel.php`
+* Antes da refatoração - `dao/LeadModel.php`
 
 ```php
 <?php
@@ -271,7 +395,7 @@ use AppCrm\BD;
 class LeadModel extends BD {}
 ```
 
-* `dao/UsuarioModel.php`
+* Antes da refatoração - `dao/UsuarioModel.php`
 
 ```php
 <?php
@@ -317,20 +441,6 @@ print_r($usuarioModel);
 echo '<br>';
 
 // echo 'Teste ISP';
-```
-
-* `interfaces/ICadastro.php`
-
-```php
-<?php
-namespace AppCrm\interfaces;
-use AppCrm\componentes\Log;
-use AppCrm\componentes\Notificacao;
-interface ICadastro {
-    public function salvar();
-    public function registrarLog(Log $log);
-    public function enviarNotificacao(Notificacao $notificacao);
-}
 ```
 
 * composer.json

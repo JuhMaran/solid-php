@@ -14,14 +14,4 @@ class ContratoModel extends BD implements ICadastro
     {
         // Lógica para salvar o contrato no banco de dados
     }
-
-    public function registrarLog(Log $log)
-    {
-        // Lógica para registrar o log do contrato
-    }
-
-    public function enviarNotificacao(Notificacao $notificacao)
-    {
-        // Lógica para enviar uma notificação relacionada ao contrato
-    }
 }
