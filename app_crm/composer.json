@@ -1,0 +1,15 @@
+{
+    "name": "julia/app_crm",
+    "autoload": {
+        "psr-4": {
+            "AppCrm\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "JuhMaran",
+            "email": "julianemaran@gmail.com"
+        }
+    ],
+    "require": {}
+}
