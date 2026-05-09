@@ -1,0 +1,15 @@
+{
+    "name": "julia/app_poligonos",
+    "autoload": {
+        "psr-4": {
+            "AppPoligonos\\": "src/"
+        }
+    },
+    "authors": [
+        {
+            "name": "JuhMaran",
+            "email": "julianemaran@gmail.com"
+        }
+    ],
+    "require": {}
+}
