@@ -309,6 +309,26 @@ Repare que ele retorna para nós `100`, por quê? Porque justamente pela sobresc
 
 ## 26. Entendendo o Liskov Substitution Principle
 
+O instrutor inicia a aula compartilhando e explicando o slide, antes de passar para o código.
+
+Proposto em 1993 por Barbara Liskov e Jeannette Wing através do artigo "Family Values: A Behavioral Notion of Subtyping".
+
+A definição da teoria diz:
+
+> Se q(x) é uma propriedade demonstrável dos objetos x de tipo T. Então q(y) deve ser verdadeiro para objetos y de tipo S, onde S é um subtipo de T.
+
+Superclasse --Herança--> subclasse A
+Superclasse --Herança--> subclasse B
+
+* Superclasse é o tipo
+* Subclasses são subtipos
+
+Subtipagem forte de comportamento.
+
+![Subtipagem forte de comportamento](./../images/006_LSP_subtipagem_forte_de%20coportamento.png)
+
+Nessa aula você será apresentado a Liskov Substitution Principle, ou em português Princípio da Substituição de Liskov, ou simplesmente LSP. Esse princípio foi proposto em 1993 por Barbara Liskov e Jeannette Wing atravéz do artigo "Family Values: A Behavioral Notion of Subtyping". A definição da teoria diz: 'Se q(x) é uma propriedade demonstrável dos objetos x de tipo T. Então q(y) deve ser verdadeiro para objetos y de tipo S, onde S é um subtipo de T.' Esta definição deve estar um pouco confusa na sua mente, mas não se preocupe, eu tenho certeza que até o término dessa sessão você entenderá esse princípio. A definição em questão prova a teoria de que os objetos de tipos derivados (subclasses ou classes filhas), ou seja, os subtipos devem ser capazes de substituírem os tipos primários (superclasse ou classe pai). Portanto, os subtipos devem ser capazes de substituírem em qualquer contexto da aplicação as suas respectivas classes pais ou superclasses, ou seja, os tipos. Em um primeiro momento pensar dessa forma parece quebrar a ideia de especializar classes, afinal, por qual motivo nós utilizaríamos as subclasses no lugar das superclasses? Pense nessa definição como sendo apenas uma forma de tirar a prova real de que os nossos códigos estão atendendo ao Princípio da Substituição de Liskov. É importante ter em mente que o Princípio da Substituição de Liskov está direcionado para a **subtipagem forte de comportamento**, ou seja, a questão é 'como podemos preservar os comportamentos da superclasse em suas subclasses, de modo que as subclasses em substituição da sua respectiva superclasse produza o mesmo resultado no código?'. Resumindo, **nós não podemos quebrar o coportamento da superclasse na sua cadeia de subclasses**. Portanto, o Princípio da Substituição de Liskov nos ajuda a utilizar de modo consistente a nossa capacidade intelectual de abstração dos objetos do mundo real, diferenciado quais são as relações de heranças de especialização de tipos que realmente fazem sentido no contexto programático. A partir de agora, você irá notar que nem toda a abstração dos objetos do mundo real se encaixa de fato dentro de um contexto programático. Se o Princípio da Substituição de Liskov for adotado nesse processo de abstração. Como foi visto no Projeto Polígonos em aulas anteriores, é muito importante tomarmos cuidado com a afirmação e na hora de realizarmos as abstrações dos objetos do mundo real para dentro das nossas aplicações. Em muitos casos observando o mundo real é possível sustentar a afirmação 'é um' para o relacionamento entre objetos que estamos analisando, mas de modo programático levando em consideração a tipagem forte de comportamento proposto pelo LSP, pelo Princípio da Substituição de Liskov. Podemos notar que muitas vezes essa abstração embora sustentada em argumentos consistentes, ela não é possível de ser sustentada dentro de uma lógica programática. Portanto, embora o LSP, em um primeiro momento possa gerar uma certa dúvida e até ser um pouco complexo de ser compreendido. Resumindo, o que esse princípio sustenta é que os comportamentos dentro de uma cadeia de herança precisam se manter consistentes de modo que se os subtipos forem usados nos locais dos tipos que os comportamentos continuem funcionar da mesma forma essa aportado é 'subtipagem forte de comportamento' proposto pelo LSP. Até a próxima aula.
+
 ## 27. Refactoring do Projeto - Aplicando o Princípio na Prática
 
 ## Implementação Final Completa
