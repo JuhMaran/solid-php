@@ -408,6 +408,91 @@ Objetos devem ser utilizados de forma intercambiável sem efeitos colaterais ine
 
 ### Objetivo
 
+Demonstrar como interfaces excessivamente grandes geram acoplamento desnecessário.
+
+### Problema Inicial
+
+Uma interface única obrigava classes a implementar métodos que não utilizavam.
+
+```mermaid
+flowchart TD
+
+A[ICadastro]
+--> B[salvar]
+A --> C[registrarLog]
+A --> D[enviarNotificacao]
+```
+
+### Estrutura Refatorada
+
+```mermaid
+flowchart TD
+
+A[ICadastro]
+--> B[salvar]
+
+C[ILog]
+--> D[registrarLog]
+
+E[INotificacao]
+--> F[enviarNotificacao]
+```
+
+### Aplicação nas Classes
+
+```mermaid
+classDiagram
+
+class ICadastro {
+    <<interface>>
+    +salvar()
+}
+
+class ILog {
+    <<interface>>
+    +registrarLog()
+}
+
+class INotificacao {
+    <<interface>>
+    +enviarNotificacao()
+}
+
+class ContratoModel
+class LeadModel
+class UsuarioModel
+
+ICadastro <|.. ContratoModel
+
+ICadastro <|.. LeadModel
+INotificacao <|.. LeadModel
+
+ICadastro <|.. UsuarioModel
+ILog <|.. UsuarioModel
+INotificacao <|.. UsuarioModel
+```
+
+### Conceitos Fundamentais
+
+#### Interfaces Coesas
+
+Interfaces devem possuir responsabilidades específicas.
+
+#### Especialização
+
+Cada classe implementa apenas o que realmente utiliza.
+
+#### Baixo Acoplamento
+
+Dependências desnecessárias devem ser evitadas.
+
+## Benefícios Obtidos
+
+* Melhor organização
+* Interfaces reutilizáveis
+* Redução de implementações inúteis
+* Código mais limpo
+
 ## DIP — Dependency Inversion Principle
 
 ### Objetivo
