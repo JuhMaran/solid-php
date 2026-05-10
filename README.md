@@ -330,6 +330,90 @@ Múltiplas implementações compartilham o mesmo contrato.
 * Redução de acoplamento
 * Facilidade de expansão
 
+## LSP — Liskov Substitution Principle
+
+### Objetivo
+
+Demonstrar problemas causados por heranças inadequadas.
+
+### Cenário
+
+O exemplo clássico de:
+
+* `Retangulo`
+* `Quadrado`
+
+é utilizado para mostrar que nem toda relação válida no mundo real é adequada para POO.
+
+### Violação do LSP
+
+```mermaid
+flowchart TD
+
+A[Retangulo]
+--> B[Quadrado]
+
+B --> C[Comportamento Alterado]
+
+C --> D[Resultado Inesperado]
+```
+
+### Problema
+
+A subclasse `Quadrado` alterava o comportamento esperado da classe `Retangulo`.
+
+Isso quebrava previsibilidade e consistência.
+
+### Estrutura Corrigida
+
+```mermaid
+classDiagram
+
+class Poligono
+
+class Retangulo {
+    +calcularArea()
+}
+
+class Quadrado {
+    +calcularArea()
+}
+
+Poligono --> Retangulo
+Poligono --> Quadrado
+```
+
+### Conceitos Fundamentais
+
+#### Substituição Segura
+
+Subclasses devem preservar contratos da superclasse.
+
+#### Contratos de Comportamento
+
+A herança deve manter previsibilidade.
+
+#### Polimorfismo
+
+Objetos devem ser utilizados de forma intercambiável sem efeitos colaterais inesperados.
+
+### Benefícios Obtidos
+
+* Arquitetura previsível
+* Redução de bugs
+* Melhor extensibilidade
+* Menor acoplamento inadequado
+
+## ISP — Interface Segregation Principle
+
+### Objetivo
+
+## DIP — Dependency Inversion Principle
+
+### Objetivo
+
+Demonstrar como depender de abstrações ao invés de implementações concretas.
+
 ## Relação Entre os Princípios
 
 ```mermaid
