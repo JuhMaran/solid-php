@@ -251,6 +251,85 @@ A[Classe]
 * Facilidade de refatoração
 * Validação contínua
 
+## OCP — Open/Closed Principle
+
+### Objetivo
+
+Demonstrar como construir sistemas extensíveis sem modificar código estável.
+
+### Projeto ETL
+
+O projeto realiza:
+
+* leitura de arquivos CSV;
+* leitura de arquivos TXT;
+* transformação de dados;
+* organização de estruturas.
+
+### Problema Inicial
+
+O sistema utilizava múltiplos condicionais:
+
+```text
+if csv
+if txt
+```
+
+Cada novo formato exigia alteração de código existente.
+
+### Estrutura Refatorada
+
+```mermaid
+classDiagram
+
+class Leitor {
+    +lerArquivo()
+}
+
+class Arquivo {
+    +getDados()
+}
+
+class Csv {
+    +lerArquivo()
+}
+
+class Txt {
+    +lerArquivo()
+}
+
+class Xlsx {
+    +lerArquivo()
+}
+
+Arquivo <|-- Csv
+Arquivo <|-- Txt
+Arquivo <|-- Xlsx
+
+Leitor --> Arquivo
+```
+
+### Conceitos Fundamentais
+
+#### Extensibilidade
+
+O sistema cresce adicionando novas classes.
+
+#### Refatoração
+
+Melhoria estrutural sem alterar comportamento externo.
+
+#### Polimorfismo
+
+Múltiplas implementações compartilham o mesmo contrato.
+
+### Benefícios Obtidos
+
+* Menos alterações em código estável
+* Maior flexibilidade
+* Redução de acoplamento
+* Facilidade de expansão
+
 ## Relação Entre os Princípios
 
 ```mermaid
