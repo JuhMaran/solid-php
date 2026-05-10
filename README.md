@@ -486,7 +486,7 @@ Cada classe implementa apenas o que realmente utiliza.
 
 Dependências desnecessárias devem ser evitadas.
 
-## Benefícios Obtidos
+### Benefícios Obtidos
 
 * Melhor organização
 * Interfaces reutilizáveis
@@ -498,6 +498,85 @@ Dependências desnecessárias devem ser evitadas.
 ### Objetivo
 
 Demonstrar como depender de abstrações ao invés de implementações concretas.
+
+### Problema Inicial
+
+A classe `Mensageiro` criava diretamente objetos concretos:
+
+```php
+new Email()
+```
+
+Isso gerava forte acoplamento.
+
+### Estrutura Refatorada
+
+```mermaid
+classDiagram
+
+class IMensagemToken {
+    <<interface>>
+    +enviar()
+}
+
+class Mensageiro {
+    -canal : IMensagemToken
+    +enviarToken()
+}
+
+class Email {
+    +enviar()
+}
+
+class Sms {
+    +enviar()
+}
+
+class WhatsApp {
+    +enviar()
+}
+
+IMensagemToken <|.. Email
+IMensagemToken <|.. Sms
+IMensagemToken <|.. WhatsApp
+
+Mensageiro --> IMensagemToken
+```
+
+### Fluxo de Injeção de Dependência
+
+```mermaid
+sequenceDiagram
+
+participant App
+participant Mensageiro
+participant Email
+
+App->>Mensageiro: new Mensageiro(new Email())
+Mensageiro->>Email: enviar()
+```
+
+### Conceitos Fundamentais
+
+#### Inversão de Dependência
+
+Módulos de alto nível devem depender de abstrações.
+
+#### Injeção de Dependência
+
+Dependências devem ser fornecidas externamente.
+
+#### Interfaces
+
+Garantem contratos padronizados.
+
+### Benefícios Obtidos
+
+* Baixo acoplamento
+* Alta flexibilidade
+* Facilidade de testes
+* Melhor manutenção
+* Maior extensibilidade
 
 ## Relação Entre os Princípios
 
