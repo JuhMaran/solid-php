@@ -231,4 +231,49 @@ Utilizou a classe `Email` e executou até enviar corretamente, na sequência uti
 
 ## 36. Entendendo o Dependency Inversion Principle
 
+Nessa aula vou falar sobre o quinto princípio SOLID, o Dependency Inversion Principle ou em português o Princípio da Inversão de Dependência ou simplesmente DIP. O princípio diz:
+
+* Módulos de alto nível NÃO devem depender de módulos de baixo nível. Ambos devem depender de abstrações.
+* Dependa de uma abstração e não de uma implementação.
+* Abstrações NÃO devem depender de detalhes. Detalhes devem depender de abstrações.
+
+O que tudo isso quer dizer afinal? Vamos entender por partes Quando dizemos que módulos de alto nível não devem depender de módulos de baixo nível isso significa que precisamos ficar atentos com as instâncias de classes que são descritas dentro de outras classes. Por exemplo no projeto que desenvolvemos em aulas anteriores a classe `Mensageiro` descreve a instância de uma classe em `Email` ou `Sms` dentro do método `enviarToken()` qual classe será utilizada depende do canal que será utilizado pelo objeto mensageiro. Mas repare que existe uma relação de dependência, o que temos aqui é que a classe `Mensageiro` está
+dependendo diretamente de uma outra classe que pode ser a classe `Email` ou `Sms`. Ou seja, o `Mensageiro` só vai funcionar se a instância da classe `Email` ou `Sms` funcionar também. Nesse contexto a classe `Mensageiro` é a classe de alto nível enquanto a classe `Email` ou `Sms` são as classes de baixo nível. Isso porque nesse exemplo a classe mensageiro está atuando como um cliente das classes `Email` ou `Sms`. Em outras palavras a classe `Mensageiro` está consumindo e dependendo das classes `Email` ou `Sms`. De modo bastante simplificado, quando temos instâncias de classes dentro de outras classes, a classe que descreve a instância é tida como a classe de alto nível. Enquanto a classe consumida será a classe de baixo nível. Portanto nesse exemplo nós temos claramente uma dependência de um módulo de alto nível em relação ao módulo de baixo nível. Embora a abordagem que usamos no desenvolvimento dessa solução pareça correta funcione e ainda atenda aos princípios SOLID os quais tínhamos conhecimento até o momento de criação do projeto. Ainda assim nós estamos ferindo o Princípio da Inversão de Dependência. A partir de agora, fique ligado quando classes implementarem outras classes, ou seja, quando surgir um operador móvel dentro das classes. Tenha em mente que você está estabelecendo uma relação de dependência em que a classe cliente dependerá diretamente da classe consumida criando um forte acoplamento entre objetos. Portanto nesses casos nós teremos um ponto de atenção com o princípio da inversão de dependência deve ser considerado.
+
+Exemplo:
+
+```text
+Instância:
+
+$a = new B();
+```
+
+Repare que temos também a afirmação de que ambos devem depender de abstrações e ainda dependa de uma abstração e não de uma implementação.
+
+* Abstrações são:
+  * Classes Abastratas
+  * Interfaces
+* Inversão de dependência atráves de injeção de dependência.
+* Tipos de Injeção de Dependências:
+  * Injeção via construtor
+  * Injeção via métodos `get` e `set`
+  * Injeção via interface
+  * Injeção via framework
+
+Abstrações nesse caso são de fato classes abstratas ou interfaces, é aqui que ocorre a inversão de dependência através da técnica de injeção de dependência que pode ser feita de algumas formas diferentes tais como injeção via construtor, injeção via propriedades utilizando os métodos `get` e `set`, e injeção via interface ou mesmo em injeção via algum framework. Não se preocupe ainda com uma questão prática, nesse curso você vai aprender a como utilizar a técnica de injeção de dependência para atender ao princípio da inversão de dependência, mas isso será nas próximas aulas. Retomando, quando realizamos uma instância de uma classe criamos um objeto daquele tipo com todos os seus atributos e comportamentos de acordo com suas visibilidades, mas vamos parar e refletir um pouco. Será que a classe cliente precisa realmente saber de todos os atributos e comportamentos da classe que está distanciada? Bom para o princípio da inversão de dependência o ideal seria que a classe de alto nível não tivesse conhecimento dos comportamentos da classe de baixo nível, exceto o claro dos comportamentos dos quais ela faria uso. Nesse exemplo, será que todos os comportamentos de um objeto do tipo e-mail ou SMS são de fato necessários para um objeto do tipo mensageiro? Com certeza não. Com certeza com os objetos dos tipos `Email` ou `Sms` possuíriam comportamentos totalmente irrelevantes para um objeto do tipo o mensageiro que espera utilizar apenas o comportamento `enviar()`, aqui que precisamos e extrair para uma classe abstrata ou para uma interface o comportamento usado pela classe de alto nível em relação à classe de baixo nível. Em outras palavras nesse exemplo a classe `Mensageiro` espera ter acesso ao comportamento que `enviar()` das classes `Email` ou `Sms`. Logo, precisamos abstrair esse comportamento que é o comportamento `enviar()` tanto da classe `Email` quanto da classe `Sms` para uma classe abstrata ou para uma interface de modo que essa abstração possa ser utilizada no lugar da implementação das classes `Email` ou `Sms`. Repare que nós até já fizemos isso porque ao longo do desenvolvimento do projeto, nós estávamos seguindo com os princípios SOLID que até então tínhamos conhecimento. Repare que o comportamento a `enviar()` já foi abstraindo ele já faz parte de uma interface que é a interface `IMensagem`. Isso significa que para atender ao princípio da inversão de dependência nós precisamos agora injetar a dependência abstrata dentro do objeto `Mensageiro` ao invés de implementar as classes `Email` ou `Sms` internamente dentro do módulo `enviarToken()`. Ao fazer isso estamos literalmente invertendo a dependência. A classe `Mensageiro` irá depender da abstração `IMensagem` e não mais da implementação das classes `Email` ou `Sms` sendo que para realizar essa inversão vamos utilizar a técnica comentada de injeção de dependência. Isso pode parecer um pouco complicado nesse primeiro momento mas fique tranquilo eu tenho certeza que na prática você entenderá bem o conceito. Quando nós aplicamos a inversão de dependência através da injeção de dependência, alguns benefícios são alcançados tais como a classe de alto nível por não depender de uma implementação de uma classe de baixo nível não se torna frágil a mudanças relacionadas às classes de baixo nível. Ao realizar a injeção de uma dependência estamos eliminando o forte acoplamento entre os objetos. Ou seja, ao injetar um objeto em outro objeto nós evitamos que a necessidade de instanciar o objeto injetado dentro do objeto cliente. Como faremos a injeção de uma abstração nós podemos injetar qualquer objeto que implemente a abstração. Isso torna o código bem mais flexível. Além disso com a injeção de dependências nós criamos escopos bem mais definidos facilitando os testes unitários. Bom eu tenho certeza que tudo isso está um pouco confuso em sua mente. Mas não se preocupe vamos partir para a prática e eu tenho certeza que tudo isso ficará bem mais claro então até a próxima aula.
+
+![Entendendo o Dependency Inversion Principle](./../images/010_projeto_mensageiro_DIP.png)
+
+* Classe `Mensageiro`
+  * --depende--> da Classe `Email`
+  * --depende--> da Classe `Sms`
+  * atributo `canal`
+  * método `enviarToken()`
+* Interface `IMensagem`
+  * método `enviar()`
+* Classe `Email` --implements--> Interface `IMensagem`
+  * método `enviar()`
+* classe `Sms` --implements--> Interface `IMensagem`
+  * método `enviar()`
+
 ## 37. Refactoring do Projeto - Aplicando o Princípio na Prática
