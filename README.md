@@ -628,6 +628,46 @@ Ao aplicar os princípios SOLID, o projeto evolui de uma estrutura rígida para 
 * reutilizável;
 * testável.
 
+## SRP — Single Responsibility Principle
+
+O SRP define que uma classe deve possuir apenas uma responsabilidade e, consequentemente, apenas um motivo para mudar. O objetivo é evitar classes excessivamente grandes e acopladas, tornando o sistema mais organizado, reutilizável e fácil de manter. No projeto, a responsabilidade do carrinho de compras foi separada entre classes específicas, como `CarrinhoCompra`, `Item`, `Pedido` e `EmailService`.
+
+## Projeto SRP — Carrinho de Compras
+
+O projeto demonstra a evolução de uma aplicação inicialmente centralizada em uma única classe para uma estrutura mais modular. O sistema foi refatorado para separar responsabilidades de gerenciamento de itens, controle de pedidos, validações e envio de e-mails, aplicando o princípio da responsabilidade única.
+
+## OCP — Open/Closed Principle
+
+O OCP estabelece que entidades de software devem estar abertas para extensão, mas fechadas para modificação. Isso significa que novos comportamentos devem ser adicionados sem alterar código já estável. O objetivo é reduzir riscos de regressão e facilitar a evolução da aplicação.
+
+## Projeto OCP — ETL
+
+O projeto ETL demonstra como criar um sistema extensível para leitura de arquivos. Inicialmente, o sistema utilizava condicionais para tratar CSV e TXT. Após a refatoração, cada formato passou a possuir sua própria classe, permitindo adicionar novos formatos como XLSX ou XML sem modificar o código existente.
+
+## LSP — Liskov Substitution Principle
+
+O LSP define que subclasses devem poder substituir suas superclasses sem alterar o comportamento esperado do sistema. O foco do princípio é garantir previsibilidade, consistência e contratos corretos entre herança e comportamento.
+
+## Projeto LSP — Polígonos
+
+O projeto utiliza o exemplo clássico de `Retangulo` e `Quadrado` para demonstrar problemas de herança inadequada. A implementação inicial violava o comportamento esperado da superclasse. A solução foi remover a herança incorreta e reorganizar as classes utilizando abstrações mais adequadas.
+
+## ISP — Interface Segregation Principle
+
+O ISP afirma que classes não devem ser obrigadas a implementar métodos que não utilizam. O princípio incentiva a criação de interfaces pequenas, específicas e coesas, reduzindo acoplamento e implementações desnecessárias.
+
+## Projeto ISP — CRM
+
+O projeto CRM demonstra os problemas de uma interface excessivamente grande. Inicialmente, diferentes classes eram obrigadas a implementar métodos inúteis. Após a refatoração, a interface foi dividida em contratos menores e especializados, permitindo que cada classe utilize apenas os comportamentos necessários.
+
+## DIP — Dependency Inversion Principle
+
+O DIP estabelece que módulos de alto nível não devem depender de implementações concretas, mas de abstrações. O objetivo é reduzir acoplamento, aumentar flexibilidade e facilitar manutenção e testes.
+
+## Projeto DIP — Mensageiro
+
+O projeto Mensageiro demonstra a aplicação de abstrações e injeção de dependência em um sistema de envio de mensagens. Inicialmente, a classe principal dependia diretamente de implementações como `Email` e `Sms`. Após a refatoração, o sistema passou a depender de interfaces, permitindo adicionar novos canais sem alterar a lógica principal.
+
 ## Referências
 
 * [Curso SOLID - Os 5 Princípios para as Boas Práticas da POO](https://www.udemy.com/course/solid-os-5-principios-para-as-boas-praticas-da-poo/)
