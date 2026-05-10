@@ -277,3 +277,190 @@ Abstrações nesse caso são de fato classes abstratas ou interfaces, é aqui qu
   * método `enviar()`
 
 ## 37. Refactoring do Projeto - Aplicando o Princípio na Prática
+
+Nessa aula, vamos colcoar em prática os conhecimentos acerca do quinto e último princípio SOLID, Dependency Inversion Principle. Nós faremos um refactoring do projeta mensageiro ajustando os nossos códigos para que os nossos códigos passem a atender esse princípio também. No código, olhe a classe `Mensageiro`, temos um método em `enviar()`, repare que nós temos um operador `new` dentro desse método. Quando nós temos esse operador `new` dentro de um método de uma classe nós estamos inevitavelmente criando um forte acoplamento, uma dependência direta da classe de alto nível para com as classes de baixo nível. Repare que aqui a classe que será instanciada `Sms` ou `Email`, vai depender do canal determinado aqui no atributo `$canal` da classe `Mensageiro`. Mas ainda assim porém distanciar um objeto seja de `Sms` ou `Email`, dentro desse método, nós estamos dependendo diretamente de uma classe de baixo nível e a inversão de dependência, diz que nós não podemos depender de implementações. Implementações na prática, quando estamos falando de Orientação a Objetos são instâncias.
+
+```php
+$obj = new $classe(); // implementações = instâncias
+```
+
+Sempre quando você possuir um operador `new` dentro de uma classe você precisa ficar de olho porque é possível fazer com que haja uma injeção dessa dependência ao invés da implementação do objeto em si, da classe. Nesse caso, como podemos ajustar? Repare que aqui na classe `Mensageiro` nós dependemos do método `enviar()` do objeto que está sendo distanciado. Então esse aqui é o comportamento da classe de alto nível esperado dentro das classes de baixo nível. Repare que nós temos aqui, tanto em `Email` quanto em `Sms` o método `enviar()` implementado. E nós implementamos esse método porque nós criamos uma interface. Interface, nesse caso funciona também como uma abstração. A abstração, melhor dizendo, nesse contexto do ponto de vista técnico são classes abstratas ou interfaces. Então quando falamos que uma inversão de dependência nós precisamos depender de abstrações nós estamos falando que ao invés de implementar as classes em si, nós precisamos depender de interfaces ou classes abstratas. Já fizemos a parte de abstração do método tanto de `Email` quanto `Sms`, que é utilizado na classe `Mensageiro`. Então nós já temos uma abstração do comportamento de mensageiro dentro de `Sms` e `Email`. O desafio agora, é inverter essa lógica e, para inverter essa lógica de dependência, vamos utilizar a injeção de dependência. É claro que em algum momento as classes precisam ser instanciadas. O segredo aqui é: 'onde?'. E um método bastante comum de injeção de dependência é a injeção de dependência no construtor. Observe, como isso funciona. No `index.php`, repare que nós temos `Mensageiro` instanciado duas vezes, uma para `$msg` e outra para `$msg2`, determinando qual seria o canal. Vamos mudar um pouco isso. Comentar o trecho de código anterior.
+
+No arquivo `index.php`, vamos adicionar:
+
+* `use AppMensageiro\Email;`
+* `use AppMensageiro\Sms;`
+
+Recuparada essas classes nós vamos injetar essas classes no construtor do objeto `Mensageiro`. Nós vamos passar uma instância aqui no construtor. Então olha só como nós estamos falando de `Email` eu vou passar um `new Email()` e aqui eu vou passar um `new Sms()`.
+
+```php
+<?php
+
+require __DIR__ . '/vendor/autoload.php';
+
+use AppMensageiro\Mensageiro;
+use AppMensageiro\Email;
+use AppMensageiro\Sms;
+
+// ----- canal e-mail -----
+$msg = new Mensageiro(new Email());
+$msg->setCanal('email');
+$msg->enviarToken();
+
+echo '<br>'; // quebra de linha para facilitar a leitura
+
+// ----- canal sms -----
+$msg2 = new Mensageiro(new Sms());
+$msg2->setCanal('sms');
+$msg2->enviarToken();
+```
+
+Isso significa que na classe `Mensageiro` nós vamos receber essa informação no construtor. Então vou implementar aqui o método construtor. Só que aqui nós não vamos depender do `Email` ou do `Sms`. De fato nós vamos depender da interface ou seja vamos depender de uma abstração. No slide foi colocado como sendo `IMensagem`, mas a nossa interface, na verdade é `IMensagemToken`. Então, na classe `Mensageiro`, vamos importr a interface `use AppMensageiro\IMensagemToken;` e vamos utilizar essa interface para determinar o que nós vamos receber aqui. Um objeto que nós vamos receber aqui nesse processo de injeção de dependência. Nós vamos falar que a nossa classe `Mensageiro` depende não do `Email` ou do `Sms` em si, mas da interface que determina o método que os objetos devem implementar, nos objetos que também dependem dessa respectiva Interface. Então é por isso que nós falamos que tanto as classes de alto nível quanto as classes de baixo nível precisam depender de abstrações e não de implementações aqui. 
+
+Isso é uma implementação:
+
+```php
+$obj = new $classe();
+```
+
+Nós estamos distanciando uma classe diretamente. Já aqui, estamos invertendo essa dependência:
+
+```php
+public function __construct(IMensagemToken ) {  }
+```
+
+Nós estamos passando um objeto já instanciado, mas trabalhando com a sua respectiva abstração, ou seja, aqui dentro da classe mensageiros só interessa pra nós os métodos dessa abstração com os demais métodos que por ventura venham a ser criados nessas classes não importam porque não fazem sentido aqui para esse contexto. Então vão chamar esse parâmetro de `$canal` e ao receber esse parâmetro nós vamos chamar `$this->setCanal($canal)`. O método `setCanal()` espera receber uma string, mas nós vamos modificar isso. Agora, vamos falar que ele espera receber um `IMensagemToken`. Portanto, o método `get` desse atributo também precisa ser modificado aqui. Quando ele for chamado ele vai recuperar um objeto do tipo `IMensagemToken`.
+
+```php
+<?php
+namespace AppMensageiro;
+use AppMensageiro\IMensagemToken;
+class Mensageiro {
+    private $canal;
+    public function __construct(IMensagemToken $canal) {
+        $this->setCanal($canal);
+    }
+    public function getCanal(): IMensagemToken {
+        return $this->canal;
+    }
+    public function setCanal(IMensagemToken $canal): void {
+        $this->canal = $canal;
+    }
+    public function enviarToken(): void {
+        $classe = 'AppMensageiro\\' . ucfirst($this->canal);
+        echo $classe;
+        echo '<br>';
+        $obj = new $classe();
+        $obj->enviar();
+    }
+}
+```
+
+Feito isso nós já estamos injetando dependência e não faz mais sentido aqui nesse contexto utilizar o método `setCanal()` para determinar qual seria o canal para envio do token. Estamos passando a dependência necessária e na sequência estamos chamando o método `enviarToken()`.
+
+```php
+<?php
+require __DIR__ . '/vendor/autoload.php';
+use AppMensageiro\Mensageiro;
+use AppMensageiro\Email;
+use AppMensageiro\Sms;
+// ----- canal e-mail -----
+$msg = new Mensageiro(new Email());
+// $msg->setCanal('email');
+$msg->enviarToken();
+echo '<br>'; 
+// ----- canal sms -----
+$msg2 = new Mensageiro(new Sms());
+// $msg2->setCanal('sms');
+$msg2->enviarToken();
+```
+
+Já no método `enviarToken()`, na classe `Mensageiro` Vamos comentar a lógica implementada anteriormente. O que precisamos fazer aqui é recuperar o canal e executar o método `enviar()`.
+
+O método `enviar()` é chamado a partir do objeto $canal, que é uma instância de uma classe que implementa a interface `IMensagemToken`. Isso permite que o código seja flexível e possa trabalhar com diferentes tipos de canais de mensagem sem precisar modificar a classe `Mensageiro`.
+
+```php
+public function enviarToken(): void {
+    $this->getCanal()->enviar();
+
+    /* $classe = 'AppMensageiro\\' . ucfirst($this->canal);
+    echo $classe; // acompanhar o nome da classe que está sendo instanciada
+    echo '<br>'; // quebra de linha para facilitar a leitura
+    $obj = new $classe(); // implementações = instâncias
+    $obj->enviar(); */
+}
+```
+
+Como o método `enviar()` está assinado na nossa interface. Então nós sabemos que esse método existe, obrigatoriamente que o objeto que for injetado no construtor precisa ter esse método. Vamos salvar. Ir no browser, atualizar. E o que era esperado, retornou corretamente. Tudo funcionando.
+
+```text
+E-mail: Seu token é 555-333
+SMS: Seu token é 888-333
+```
+
+O mais interessante, observe que nossa aplicação se torna mais coesa e menos fortemente acoplada. Afinal de contas a base é do SOLID é **baixo acoplamento** e **alta coesão**. Podemos ver que as coisas se tornam mais consistentes. Se for em `src/` e criar uma nova classe, chamada `WhatsApp.php`. Imagine, que agor podemos enviar o token via WhatsApp.
+
+```php
+<?php
+namespace AppMensageiro;
+class WhatsApp {
+    public function enviar(): void {
+        echo 'WhatsApp: Seu token é 888-333';
+    }
+}
+```
+
+Se eu vir aqui e falar que essa classe não implementa a interface `IMessageToken`. E ir no `index.php` com o novo objeto mensageiro e se nós passássemos aqui uma instância desse novo objeto o `WhatsApp`. Aparentemente tudo certo estamos importando a classe vetando a sua respectiva instância. A única diferença é que o WhatsApp não depende da abstração porém a classe `Mensageiro` depende.
+
+```php
+<?php
+require __DIR__ . '/vendor/autoload.php';
+use AppMensageiro\Mensageiro;
+use AppMensageiro\Email;
+use AppMensageiro\Sms;
+use AppMensageiro\WhatsApp;
+// ----- canal e-mail -----
+$msg = new Mensageiro(new Email());
+$msg->enviarToken();
+echo '<br>'; 
+// ----- canal sms -----
+$msg2 = new Mensageiro(new Sms());
+$msg2->enviarToken();
+echo '<br>';
+// ----- canal WhatsApp -----
+$msg3 = new Mensageiro(new WhatsApp());
+$msg3->enviarToken();
+```
+
+Então o que será que acontece. Voltando aqui nós teremos um erro. 
+
+```bash
+Stack trace:
+#0 C:\Users\julia\Desktop\Juliane\011_GitHub_Repositories\solid-php\app_mensageiro\index.php(23): AppMensageiro\Mensageiro->__construct()
+#1 {main}
+  thrown in C:\Users\julia\Desktop\Juliane\011_GitHub_Repositories\solid-php\app_mensageiro\src\Mensageiro.php on line 11 
+```
+
+Repare que o erro diz que o argumento passado não implementa a interface `IMensagemToken`, porque isso significa que qualquer objeto passado pra `Mensageiro` por ter uma dependência relativa a uma abstração precisa implementar essa abstração seja uma classe abstrata com uma interface. Então nós precisamos ir na classe `WhatsApp` e adicionar a implementação dessa interface, garantindo que o objeto encaminhado aqui para `Mensageiro` implemente tudo o que foi definido nessa abstração.
+
+```php
+<?php
+namespace AppMensageiro;
+class WhatsApp implements IMensagemToken {
+    public function enviar(): void {
+        echo 'WhatsApp: Seu token é 888-333';
+    }
+}
+```
+
+Vamos salvar, verificar se esta funcionando. No browser retornou corretamente:
+
+```text
+E-mail: Seu token é 555-333
+SMS: Seu token é 888-333
+WhatsApp: Seu token é 888-333
+```
+
+Então é dessa forma que nós podemos injetar as nossas dependências pra fazer uma inversão de dependência fazer com que os nossos códigos, nas nossas classes não dependam das implementações e sim das abstrações fazendo com que o nosso código fique bastante enxuto, bastante inteligente e flexível.
+
+Bom eu espero que você tenha gostado de participar desse curso espero que você tenha compreendido bem os cinco princípios SOLID e tem enxergado as vantagens que esses princípios podem trazer para o seu dia a dia para a qualidade dos seus códigos. A partir de agora a sugestão é que você pratique e intensifique o uso desses princípios dentro dos seus projetos. Eu tenho certeza que você ao longo do tempo conforme for implementando esses princípios com certeza você vai começar a sentir os benefícios de utilizar essas boas práticas. Então até a próxima aula.
