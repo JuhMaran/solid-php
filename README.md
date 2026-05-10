@@ -12,7 +12,7 @@ Os princípios SOLID foram formalizados por Robert C. Martin e posteriormente po
 
 Esses princípios ajudam a reduzir acoplamento, aumentar coesão e melhorar a capacidade de evolução de sistemas orientados a objetos.
 
-### objetivos do Projeto
+### Objetivos do Projeto
 
 * Demonstrar os princípios SOLID na prática
 * Aplicar refatoração orientada a boas práticas
@@ -142,6 +142,114 @@ D --> F[Alta Coesão]
 D --> G[Testabilidade]
 D --> H[Extensibilidade]
 ```
+
+## SRP - Single Responsability Principle
+
+### Objetivo
+
+Demonstrar como separar responsabilidades de uma classe excessivamente acoplada.
+
+### Cenário
+
+Inicialmente, a classe `CarrinhoCompra` possuía múltiplas responsabilidades:
+
+* gerenciamento de itens;
+* validação;
+* controle de pedido;
+* envio de e-mails.
+
+Isso tornava o sistema difícil de manter e evoluir.
+
+### Estrutura Refatorada
+
+```mermaid
+classDiagram
+
+class CarrinhoCompra {
+    +adicionarItem()
+    +getItens()
+}
+
+class Item {
+    +descricao
+    +valor
+    +itemValido()
+}
+
+class Pedido {
+    +confirmarPedido()
+}
+
+class EmailService {
+    +enviar()
+}
+
+CarrinhoCompra --> Item
+Pedido --> CarrinhoCompra
+Pedido --> EmailService
+```
+
+### Conceitos Fundamentais
+
+#### Baixo Acoplamento
+
+Mudanças em uma classe devem impactar minimamente as demais.
+
+#### Coesão
+
+Componentes devem possuir responsabilidades claras e específicas.
+
+#### Responsabilidade Única
+
+Cada classe deve possuir apenas um motivo para mudar.
+
+### Benefícios Obtidos
+
+* Código mais organizado
+* Melhor manutenção
+* Facilidade de reutilização
+* Maior previsibilidade
+
+### Testes Automatizados
+
+#### Objetivo
+
+Introduzir testes unitários automatizados utilizando PHPUnit.
+
+#### Estrutura Básica
+
+```text
+tests/
+├── ItemTest.php
+└── CarrinhoCompraTest.php
+```
+
+#### Fluxo dos Testes
+
+```mermaid
+flowchart LR
+
+A[Classe]
+--> B[Teste Unitário]
+--> C[Asserções]
+--> D[Validação do Comportamento]
+```
+
+### Conceitos Aplicados
+
+* Testes unitários
+* Asserções
+* Data Providers
+* TDD
+* Isolamento de comportamento
+
+### Benefícios
+
+* Redução de regressões
+* Maior confiabilidade
+* Facilidade de refatoração
+* Facilidade de refatoração
+* Validação contínua
 
 ## Relação Entre os Princípios
 
